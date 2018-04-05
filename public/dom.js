@@ -17,7 +17,7 @@
 };
 
 // -- EVENT LISTENERS
-
+// remember to add prevent default to submit button
 
 // -- CALLBACK FUNCTIONS
 // dom manipulation to update after receiving data
