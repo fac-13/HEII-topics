@@ -25,9 +25,10 @@ const staticHandler = (response, filepath) => {
 };
 
 const getDataHandler = (response, query) => {
+  console.log("get to datahandler");
   getData(query, (err, res) => {
     if (err) {
-      console.log(err);
+      console.log("ERROR AT GET DATA HANDLER");
       response.writeHead(500, { "content-type": "text/plain" });
       response.end("server error");
     } else {

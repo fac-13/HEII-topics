@@ -8,20 +8,20 @@ var utility = {
   fetch: function(url, cb) {
     var xhr = new XMLHttpRequest();
 
-    xhr.addEventListener('load', function() {
+    xhr.addEventListener("load", function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        console.log('fetch is working', url);
+        console.log("fetch is working", url);
         var response = JSON.parse(xhr.responseText);
-        cb(response);
+        cb(null, response);
       } else {
-        console.log('XHR error', xhr.readyState);
+        cb(new TypeError("XHR error" + xhr.status));
       }
     });
-    xhr.open('GET', url, true);
+    xhr.open("GET", url, true);
     xhr.send();
   }
 };
 
-if (typeof module !== 'undefined') {
+if (typeof module !== "undefined") {
   module.exports = utility;
 }
