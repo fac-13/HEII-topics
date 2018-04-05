@@ -7,6 +7,8 @@ tape('tape is working', t => {
   t.end();
 });
 
+// GET DATA TESTS
+
 tape('getData returns array', t => {
   runDbBuild((err, res) => {
     let query = 'SELECT * FROM topic';
@@ -58,3 +60,5 @@ tape('deepEquals of getData', t => {
     });
   });
 });
+
+// POST DATA TESTS
