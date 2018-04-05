@@ -62,3 +62,13 @@ tape('deepEquals of getData', t => {
 });
 
 // POST DATA TESTS
+tape('testing postData', (t) => {
+    runDbBuild((err, res) => {
+        postData("hello", "world", (err, res) => {
+            if (err) t.fail(err);
+            console.log('post ACUTAL: ', res.command);
+            t.equal(res.command,"INSERT", "should call INSERT command");
+            t.end();
+        });
+    });
+});
