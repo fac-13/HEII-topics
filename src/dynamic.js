@@ -3,8 +3,8 @@ const dbConnection = require('./database/db_connection.js');
 
 // -- GET DATA
 
-const getData = cb => {
-  dbConnection.query('SELECT * FROM topic', (err, res) => {
+const getData = (query, cb) => {
+  dbConnection.query(query, (err, res) => {
     if (err) {
       cb(err);
     } else {
