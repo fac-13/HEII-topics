@@ -1,0 +1,27 @@
+{
+  "name": "heii-topics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test node src/test/test.js | tap-spec",
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build": "node src/database/db_build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fac-13/HEII-topics.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fac-13/HEII-topics/issues"
+  },
+  "homepage": "https://github.com/fac-13/HEII-topics#readme",
+  "devDependencies": {
+    "nodemon": "^1.17.3",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.9.0"
+  }
+}

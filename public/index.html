@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Voting poll for topics</title>
+    <link rel="stylesheet" href="/public/style.css">
+    <meta charset="UTF-8" />
+    <meta name="description" content="FAC sixth week project" />
+    <meta name="keywords" content="API, testing, application, databases" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="HEII: Helen, Eade, Isaac and Ivi" />
+</head>
+
+<body>
+    <header>
+        <h1>Topics</h1>
+    </header>
+    <main>
+        <form method="POST" action="/create-topic">
+            <input aria-label="topic" name="topic" type="text" value="" placeholder="What should we do?" required autocomplete="off"
+                id="js-input"></input>
+        </form>
+    </main>
+
+    <script src="public/request.js" type="text/javascript"></script>
+    <script src="public/dom.js" type="text/javascript"></script>
+</body>
+
+</html>
