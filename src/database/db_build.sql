@@ -1,49 +1,40 @@
 BEGIN;
 
--- USER table
-DROP TABLE IF EXISTS user CASCADE;
+DROP TABLE IF EXISTS users, topic, voting;
 
-CREATE TABLE user (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
-
-INSERT INTO user
-VALUES (DEFAULT, 'Helen', 'password')
-VALUES (DEFAULT, 'Ivi', 'cat')
-VALUES (DEFAULT, 'Isaac', 'blue')
-VALUES (DEFAULT, 'Eade', 'colors')
-
--- TOPIC table
-
--- deletes the database and CASCADE deletes associated tables (references to it in other tables are deleted)
-DROP TABLE IF EXISTS topic CASCADE;
 
 CREATE TABLE topic (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(255) NOT NULL,
     user_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
-INSERT INTO topic (name, description, user_id)
-VALUES ('Climbing', 'Shall we do this friday?', 1)
-
--- VOTING table
-DROP TABLE IF EXISTS voting CASCADE;
 
 CREATE TABLE voting (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     topic_id INTEGER NOT NULL,
     vote_value BOOLEAN NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (topic_id) REFERENCES topic(id)
 );
 
-INSERT INTO voting
-VALUES (DEFAULT, 2, 1, true)
+INSERT INTO users (username, password) VALUES
+('Helen', 'password'),
+('Ivi', 'cat'),
+('Isaac', 'blue'),
+('Eade', 'colors');
+
+INSERT INTO topic (name, description, user_id)
+VALUES ('Climbing', 'Shall we do this friday?', 1);
+
+INSERT INTO voting (user_id, topic_id, vote_value)
+VALUES (2, 1, true);
 
 COMMIT;

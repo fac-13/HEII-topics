@@ -1,11 +1,11 @@
 const { getData, postData } = require('./dynamic');
-const staticHandler = require('./handlers');
+const { staticHandler } = require('./handler');
 
 const router = (request, response) => {
   const url = request.url;
 
   if (url === "/") {
-    staticHandler(response, "public/index.html");
+    staticHandler(response, "/public/index.html");
   } else if (url.indexOf("public") !== -1) {
     staticHandler(response, url);
   } else if ("/topics") {

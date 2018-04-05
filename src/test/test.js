@@ -1,5 +1,5 @@
 const tape = require("tape");
-const runDbBuild = require("../src/database/db_build");
+const runDbBuild = require("../database/db_build");
 const { getData, postData } = require('../dynamic');
 
 tape("tape is working", t => {
@@ -11,7 +11,8 @@ tape('what you are going to test', (t) => {
     runDbBuild((err, res) => {
         getData((err, res) => {
             if (err) {
-                console.log(err);
+                t.fail(err);
+                t.end();
             } else {
                 console.log('ACUTAL: ', res.length);
                 // return JSON.stringify(res);,
