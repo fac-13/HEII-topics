@@ -15,10 +15,10 @@ const getData = cb => {
 
 // -- POST DATA
 
-const postData = (name, location, cb) => {
+const postData = (topicTitle, description, cb) => {
   dbConnection.query(
-    'INSERT INTO users (name, location) VALUES ($1, $2)',
-    [name, location],
+    'INSERT INTO topic (topic_title, description, user_id) VALUES ($1, $2, 1)',
+    [topicTitle, description],
     (err, res) => {
       if (err) {
         return cb(err);

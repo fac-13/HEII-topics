@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 CREATE TABLE topic (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    topic_title VARCHAR(100) NOT NULL,
     description VARCHAR(255) NOT NULL,
     user_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -31,7 +31,7 @@ INSERT INTO users (username, password) VALUES
 ('Isaac', 'blue'),
 ('Eade', 'colors');
 
-INSERT INTO topic (name, description, user_id)
+INSERT INTO topic (topic_title, description, user_id)
 VALUES ('Climbing', 'Shall we do this friday?', 1);
 
 INSERT INTO voting (user_id, topic_id, vote_value)
