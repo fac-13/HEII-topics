@@ -14,7 +14,7 @@ tape('what you are going to test', (t) => {
                 t.fail(err);
                 t.end();
             } else {
-                console.log('ACUTAL: ', res.length);
+                console.log('ACUTAL: ', res);
                 // return JSON.stringify(res);,
                 //  your test goes here
                 t.equals(1, 1, "one equals one");
