@@ -1,27 +1,29 @@
-const { getData, postData } = require("./dynamic");
-const { staticHandler, getDataHandler, postDataHandler } = require("./handler");
-const querystring = require("querystring");
+const { getData, postData } = require('./dynamic');
+const {
+  staticHandler,
+  getDataHandler,
+  postDataHandler,
+  postVoteHandler
+} = require('./handler');
+const querystring = require('querystring');
 
 const router = (request, response) => {
   const url = request.url;
 
-  if (url === "/") {
-    staticHandler(response, "/public/index.html");
-  } else if (url.indexOf("public") !== -1) {
+  if (url === '/') {
+    staticHandler(response, '/public/index.html');
+  } else if (url.indexOf('public') !== -1) {
     staticHandler(response, url);
-  } else if (url.indexOf("get/topics") !== -1) {
-    console.log("got to gettopics ");
-    getDataHandler(
-      response,
-      "SELECT topic.topic_title, topic.description, users.username FROM topic, users WHERE topic.user_id = users.id"
-    );
-  } else if ("/create-topic") {
-    // postData goes here
+  } else if (url === '/get/topics') {
+    getDataHandler(response);
+  } else if (url === '/create-topic') {
     postDataHandler(request, response);
+  } else if (url.indexOf('create-vote') !== -1) {
+    console.log('Reached create-vote route');
+    postVoteHandler(request, response);
   } else {
-    response.writeHead(404, { "content-type": "text/plain" });
-    response.end("404 error");
+    response.writeHead(404, { 'content-type': 'text/plain' });
+    response.end('404 error');
   }
 };
-
 module.exports = router;
