@@ -16,13 +16,14 @@
         <h1>Topics</h1>
     </header>
     <main>
-        <form method="POST" action="/create-topic">
-            <input aria-label="topic" name="topic_title" type="text" value="" placeholder="What should we do?" required autocomplete="off"></input>
-            <input aria-label="topic" name="description" type="text" value="" placeholder="details..." required autocomplete="off"></input>
-            <input type="submit"></input>
+        <form method="POST" action="/create-topic" class="form">
+            <input aria-label="topic" name="topic_title" type="text" value="" placeholder="What should we do?" required autocomplete="off"
+                class="form__title"></input>
+            <input aria-label="topic" name="description" type="text" value="" placeholder="details..." required autocomplete="off" class="form__description"></input>
+            <input type="submit" class="form__submit"></input>
         </form>
 
-        <section id='js-topic-results'></section>
+        <section id='js-topic-results' class='topic__results'></section>
     </main>
 
     <script src="public/index.js" type="text/javascript"></script>

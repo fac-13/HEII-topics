@@ -41,18 +41,28 @@
       <label for='voting__no'> Nay! </label>
       <button type='submit'> Submit </button>
       </form>`;
-
       topicVote.insertAdjacentHTML('beforeend', radioForm);
 
+      var voteNumbers = document.createElement('div');
+      voteNumbers.classList.add('topicvotes');
+      var yesVote = document.createElement('span');
+      yesVote.classList.add('topicyes');
+      var noVote = document.createElement('span');
+      noVote.classList.add('topic__no');
       topicTitle.textContent = obj.topic_title;
       topicUsername.textContent = obj.username;
       topicDescription.textContent = obj.description;
+      yesVote.textContent = obj.yes_votes;
+      noVote.textContent = obj.no_votes;
 
       topicResult.appendChild(topicTitle);
       topicResult.appendChild(topicUsername);
       topicResult.appendChild(topicDescription);
-      topicResult.appendChild(topicVote);
+      topicVote.appendChild(voteNumbers);
+      voteNumbers.appendChild(yesVote);
+      voteNumbers.appendChild(noVote);
 
+      topicResult.appendChild(topicVote);
       topicResults.appendChild(topicResult);
     });
   };
