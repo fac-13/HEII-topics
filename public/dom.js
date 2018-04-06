@@ -1,4 +1,5 @@
 (function() {
+  var user_id = 1;
   var topicResults = document.querySelector('#js-topic-results');
 
   var clear = function(parent) {
@@ -15,6 +16,8 @@
   var renderFunc = function(res) {
     clear(topicResults);
 
+    console.log(res);
+
     res.forEach(function(obj) {
       var topicResult = document.createElement('div');
       topicResult.classList.add('topic__result');
@@ -28,7 +31,10 @@
       var topicVote = document.createElement('div');
       topicVote.classList.add('vote');
 
-      var radioForm = `<form method='POST' action='/create-vote'>
+      //radio form
+      var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
+        obj.id
+      }&user=${user_id}' class='vote__form'>
       <input type='radio' name='vote' value='true' id='voting__yes'>
       <label for='voting__yes'> Yay! </label>
       <input type='radio' name='vote' value='false' id='voting__no'>
