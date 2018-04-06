@@ -25,19 +25,18 @@
       var topicDescription = document.createElement('p');
       topicDescription.classList.add('topic__description');
 
-      var topicVote = document.createElement('form');
-      topicVote.setAttribute('method', 'post');
-      topicVote.setAttribute('action', '/create-vote');
-      var y = document.createElement('input'); //input element, text
-      y.setAttribute('type', 'radio');
-      y.setAttribute('name', 'vote');
-      y.setAttribute('value', 'yes');
-      var n = document.createElement('input'); //input element, text
-      n.setAttribute('type', 'radio');
-      n.setAttribute('name', 'vote');
-      n.setAttribute('value', 'no');
-      topicVote.appendChild(y);
-      topicVote.appendChild(n);
+      var topicVote = document.createElement('div');
+      topicVote.classList.add('vote');
+
+      var radioForm = `<form method='POST' action='/create-vote'>
+      <input type='radio' name='vote' value='true' id='voting__yes'>
+      <label for='voting__yes'> Yay! </label>
+      <input type='radio' name='vote' value='false' id='voting__no'>
+      <label for='voting__no'> Nay! </label>
+      <button type='submit'> Submit </button>
+      </form>`;
+
+      topicVote.insertAdjacentHTML('beforeend', radioForm);
 
       topicTitle.textContent = obj.topic_title;
       topicUsername.textContent = obj.username;
