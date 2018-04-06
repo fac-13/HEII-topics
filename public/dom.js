@@ -52,8 +52,8 @@
       topicTitle.textContent = obj.title;
       topicUsername.textContent = obj.username;
       topicDescription.textContent = obj.description;
-      yesVote.textContent = obj.yes_votes;
-      noVote.textContent = obj.no_votes;
+      yesVote.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
+      noVote.textContent = 'no votes: ' + obj.no_votes;
 
       topicResult.appendChild(topicTitle);
       topicResult.appendChild(topicUsername);
