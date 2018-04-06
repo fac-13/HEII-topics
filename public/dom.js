@@ -29,7 +29,6 @@
       topicVote.classList.add('vote');
 
       //radio form stuff
-
       //voteNumbers stuff
       var voteNumbers = document.createElement('div');
       voteNumbers.classList.add('topic__votes');
@@ -48,11 +47,8 @@
       topicResult.appendChild(topicUsername);
       topicResult.appendChild(topicDescription);
       topicVote.appendChild(voteNumbers);
-
       voteNumbers.appendChild(yesVote);
-
       voteNumbers.appendChild(noVote);
-
       topicResults.appendChild(topicResult);
     });
   };

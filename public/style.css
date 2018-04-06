@@ -15,9 +15,6 @@ main {
   align-items: center;
 }
 
-.form {
-}
-
 .topic__results {
   display: flex;
   flex-direction: column;
