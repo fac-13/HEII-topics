@@ -10,9 +10,10 @@ const router = (request, response) => {
   } else if (url.indexOf("public") !== -1) {
     staticHandler(response, url);
   } else if (url.indexOf("get/topics") !== -1) {
+    console.log("got to gettopics ");
     getDataHandler(
       response,
-      "SELECT topic.name, topic.description, users.username FROM topic, users WHERE topic.user_id = users.id"
+      "SELECT topic.topic_title, topic.description, users.username FROM topic, users WHERE topic.user_id = users.id"
     );
   } else if ("/create-topic") {
     // postData goes here
