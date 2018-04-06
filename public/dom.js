@@ -16,8 +16,7 @@
   var renderFunc = function(res) {
     clear(topicResults);
 
-    console.log(res);
-
+    res.reverse();
     res.forEach(function(obj) {
       var topicResult = document.createElement('div');
       topicResult.classList.add('topic__result');
@@ -49,7 +48,8 @@
       yesVote.classList.add('topicyes');
       var noVote = document.createElement('span');
       noVote.classList.add('topic__no');
-      topicTitle.textContent = obj.topic_title;
+
+      topicTitle.textContent = obj.title;
       topicUsername.textContent = obj.username;
       topicDescription.textContent = obj.description;
       yesVote.textContent = obj.yes_votes;

@@ -17,10 +17,10 @@ const getData = (query, cb) => {
 
 // -- POST DATA
 
-const postData = (topicTitle, description, cb) => {
+const postData = (topic_title, description, cb) => {
   dbConnection.query(
     'INSERT INTO topic (topic_title, description, user_id) VALUES ($1, $2, 1)',
-    [topicTitle, description],
+    [topic_title, description],
     (err, res) => {
       if (err) {
         return cb(err);

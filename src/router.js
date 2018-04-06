@@ -9,7 +9,6 @@ const querystring = require('querystring');
 
 const router = (request, response) => {
   const url = request.url;
-
   if (url === '/') {
     staticHandler(response, '/public/index.html');
   } else if (url.indexOf('public') !== -1) {
@@ -17,6 +16,7 @@ const router = (request, response) => {
   } else if (url === '/get/topics') {
     getDataHandler(response);
   } else if (url === '/create-topic') {
+    console.log('Reached create-topic route');
     postDataHandler(request, response);
   } else if (url.indexOf('create-vote') !== -1) {
     console.log('Reached create-vote route');

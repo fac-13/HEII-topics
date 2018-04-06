@@ -35,7 +35,7 @@ const getDataHandler = response => {
   COUNT(CASE WHEN v.vote_value = true THEN 1 ELSE null END) AS yes_votes,
   COUNT(CASE WHEN v.vote_value = false THEN 1 ELSE null END) AS no_votes
 FROM voting v
-INNER JOIN topic t
+RIGHT JOIN topic t
 ON t.id = v.topic_id
 INNER JOIN users u
 ON t.user_id = u.id
@@ -60,9 +60,10 @@ const postDataHandler = (request, response) => {
   request.on('end', () => {
     const data = querystring.parse(body);
     console.log('parsed data: ', data);
-    const topicTitle = data.topic_title;
+    const topic_title = data.topic_title;
+    console.log(topic_title);
     const description = data.description;
-    postData(topicTitle, description, (err, res) => {
+    postData(topic_title, description, (err, res) => {
       if (err) {
         console.log(err);
         response.writeHead(303, { Location: '/' });
@@ -72,7 +73,7 @@ const postDataHandler = (request, response) => {
         console.log('reached');
         response.writeHead(200, { 'content-type': 'text/plain' });
         response.writeHead(303, { Location: '/' });
-        response.end(`Successfully added ${topicTitle}`);
+        response.end(`Successfully added ${topic_title}`);
       }
     });
   });
