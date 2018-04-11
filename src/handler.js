@@ -127,16 +127,18 @@ const loginHandler = (request, response) => {
             data.username
           }';`,
           (err, dbResponse) => {
-            const userInfo = {
-              userId: dbResponse[0].id,
-              role: dbResponse[0].role
-            };
             if (dbResponse[0].password == data.password) {
-              response.writeHead(200, {
-                'content-type': 'text/plain'
-              });
+              const userInfo = {
+                userId: dbResponse[0].id,
+                role: dbResponse[0].role
+              };
+              const jwtCookie = jwt.sign(userInfo, secret);
 
-              response.end('password matches db');
+              response.writeHead(302, {
+                location: '/',
+                'Set-Cookie': `jwt=${jwtCookie}; HttpOnly; Max-Age=90000;`
+              });
+              response.end();
             } else {
               response.writeHead(200, {
                 'content-type': 'text/plain'
