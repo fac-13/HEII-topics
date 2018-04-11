@@ -30,7 +30,6 @@ const staticHandler = (response, filepath) => {
 };
 
 const getDataHandler = response => {
-  console.log('get to datahandler');
   const query = `SELECT
   t.id,
   t.topic_title AS title,
@@ -63,9 +62,9 @@ const postDataHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const data = querystring.parse(body);
-    console.log('parsed data: ', data);
+
     const topic_title = data.topic_title;
-    console.log(topic_title);
+
     const description = data.description;
     postData(topic_title, description, (err, res) => {
       if (err) {
@@ -74,7 +73,6 @@ const postDataHandler = (request, response) => {
         response.writeHead(500, { 'content-type': 'text/plain' });
         response.end('Something went wrong');
       } else {
-        console.log('reached');
         response.writeHead(200, { 'content-type': 'text/plain' });
         response.writeHead(303, { Location: '/' });
         response.end(`Successfully added ${topic_title}`);
@@ -96,7 +94,7 @@ const postVoteHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const data = querystring.parse(body);
-    console.log('parsed data: ', data);
+
     let vote_value = data.vote;
     postVote(topic_id, user_id, vote_value, (err, res) => {
       if (err) {
@@ -104,7 +102,6 @@ const postVoteHandler = (request, response) => {
         response.writeHead(500, { 'content-type': 'text/plain' });
         response.end('Something went wrong');
       } else {
-        console.log('reached');
         response.writeHead(303, {
           Location: '/',
           'content-type': 'text/plain'

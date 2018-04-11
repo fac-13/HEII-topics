@@ -48,7 +48,6 @@ const checkUserExists = (username, cb) => {
   return getData(
     `SELECT * FROM users WHERE username = '${username}';`,
     (err, res) => {
-      console.log('RES', res.length);
       if (res.length > 0) {
         cb(null, true);
       } else {
