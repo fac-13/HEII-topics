@@ -18,6 +18,32 @@ main {
   align-items: center;
 }
 
+/* form */
+
+.form__label {
+  display: block;
+}
+
+.form__input {
+  display: block;
+  width: 80%;
+}
+/* section registrion */
+.scn__registration {
+  border-top: 1px solid white;
+}
+
+/* section login */
+.scn__login {
+  margin-top: 2rem;
+  border-top: 1px solid white;
+}
+
+/* sections topics */
+.scn__topics {
+  margin-top: 3rem;
+  border-top: 1px solid white;
+}
 .topic__results {
   display: flex;
   flex-direction: column;
@@ -33,3 +59,4 @@ main {
   border-radius: 10px;
   margin: 5px;
 }
+
