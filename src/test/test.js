@@ -11,7 +11,7 @@ tape('tape is working', t => {
 
 tape('getData returns array', t => {
   runDbBuild((err, res) => {
-    let query = 'SELECT * FROM topic';
+    let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
       console.log('ACTUAL: ', res);
@@ -25,7 +25,7 @@ tape('getData returns array', t => {
 
 tape('getData returns array of objects', t => {
   runDbBuild((err, res) => {
-    let query = 'SELECT * FROM topic';
+    let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
       console.log('ACTUAL: ', res);
@@ -43,17 +43,16 @@ tape('getData returns array of objects', t => {
 
 tape('deepEquals of getData', t => {
   runDbBuild((err, res) => {
-    let query = 'SELECT * FROM topic';
+    let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
       console.log('ACTUAL: ', res);
       let expected = [
         {
+          id: 1,
           topic_title: 'Climbing',
           description: 'Shall we do this friday?',
-          author: 1,
-          yes_votes: 2,
-          no_votes: 1
+          user_id: 1
         }
       ];
       t.deepEquals(res, expected, `should return ${expected}`);
@@ -67,7 +66,6 @@ tape('testing postData', t => {
   runDbBuild((err, res) => {
     postData('hello', 'world', (err, res) => {
       if (err) t.fail(err);
-      console.log('post ACUTAL: ', res.command);
       t.equal(res.command, 'INSERT', 'should call INSERT command');
       t.end();
     });
