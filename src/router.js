@@ -3,7 +3,8 @@ const {
   staticHandler,
   getDataHandler,
   postDataHandler,
-  postVoteHandler
+  postVoteHandler,
+  postUserHandler
 } = require('./handler');
 const querystring = require('querystring');
 
@@ -21,6 +22,8 @@ const router = (request, response) => {
   } else if (url.indexOf('create-vote') !== -1) {
     console.log('Reached create-vote route');
     postVoteHandler(request, response);
+  } else if (url === '/registration') {
+    postUserHandler(request, response);
   } else {
     response.writeHead(404, { 'content-type': 'text/plain' });
     response.end('404 error');
