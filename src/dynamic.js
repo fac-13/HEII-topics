@@ -19,7 +19,7 @@ const getData = (query, cb) => {
 
 const postData = (topic_title, description, cb) => {
   dbConnection.query(
-    'INSERT INTO topic (topic_title, description, user_id) VALUES ($1, $2, 1)',
+    'INSERT INTO topics (topic_title, description, user_id) VALUES ($1, $2, 1)',
     [topic_title, description],
     (err, res) => {
       if (err) {
@@ -31,10 +31,10 @@ const postData = (topic_title, description, cb) => {
   );
 };
 
-const postVote = (topic_id, user_id, vote_value, cb) => {
+const postVote = (topic_id, user_id, value, cb) => {
   dbConnection.query(
-    'INSERT INTO voting (topic_id, user_id, vote_value) VALUES ($1, $2, $3)',
-    [topic_id, user_id, vote_value],
+    'INSERT INTO voting (topic_id, user_id, value) VALUES ($1, $2, $3)',
+    [topic_id, user_id, value],
     (err, res) => {
       if (err) {
         return cb(err);
