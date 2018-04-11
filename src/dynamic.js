@@ -4,7 +4,6 @@ const dbConnection = require('./database/db_connection.js');
 // -- GET DATA
 
 const getData = (query, cb) => {
-  console.log('got to getdata');
   dbConnection.query(query, (err, res) => {
     if (err) {
       cb(err);
@@ -45,4 +44,18 @@ const postVote = (topic_id, user_id, value, cb) => {
   );
 };
 
-module.exports = { getData, postData, postVote };
+const checkUserExists = (username, cb) => {
+  return getData(
+    `SELECT * FROM users WHERE username = '${username}';`,
+    (err, res) => {
+      console.log('RES', res.length);
+      if (res.length > 0) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    }
+  );
+};
+
+module.exports = { getData, postData, postVote, checkUserExists };

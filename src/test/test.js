@@ -1,6 +1,6 @@
 const tape = require('tape');
 const runDbBuild = require('../database/db_build');
-const { getData, postData } = require('../dynamic');
+const { getData, postData, checkUserExists } = require('../dynamic');
 
 tape('tape is working', t => {
   t.equals(1, 1, 'one equals one');
@@ -14,7 +14,7 @@ tape('getData returns array', t => {
     let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
-      console.log('ACTUAL: ', res);
+
       // return JSON.stringify(res);,
       //  your test goes here
       t.equals(Array.isArray(res), true, 'type of res should be array');
@@ -28,7 +28,7 @@ tape('getData returns array of objects', t => {
     let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
-      console.log('ACTUAL: ', res);
+
       // return JSON.stringify(res);,
       //  your test goes here
       t.equals(
@@ -46,7 +46,6 @@ tape('deepEquals of getData', t => {
     let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
-      console.log('ACTUAL: ', res);
       let expected = [
         {
           id: 1,
@@ -56,6 +55,18 @@ tape('deepEquals of getData', t => {
         }
       ];
       t.deepEquals(res, expected, `should return ${expected}`);
+      t.end();
+    });
+  });
+});
+
+// checks userexists func
+tape('checks checkUserExists', t => {
+  runDbBuild((err, res) => {
+    let actual = checkUserExists('Helen', (err, res) => {
+      let actual = res;
+      let expected = true;
+      t.equals(actual, expected, `should return ${expected}`);
       t.end();
     });
   });
