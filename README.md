@@ -1,6 +1,6 @@
 # HEII-topics
 
-![](https://i.imgur.com/l7lRATS.png)
+![](https://i.imgur.com/YKUeAqs.png)
 
 
 ```
