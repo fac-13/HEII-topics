@@ -146,17 +146,15 @@ const loginHandler = (request, response) => {
   request.on('end', () => {
     const { username, password } = querystring.parse(body);
     getUserData(username, (err, dbResponse) => {
-      const dbUsername = dbResponse[0].username;
-      const dbPassword = dbResponse[0].password;
-      const { id, role } = dbResponse[0];
-      if (dbUsername) {
-        bcrypt.compare(password, dbPassword, (err, compare) => {
+      const user = dbResponse[0];
+      if (user) {
+        bcrypt.compare(password, user.password, (err, compare) => {
           if (compare) {
             const userInfo = {
-              userId: id,
-              role: role
+              userId: user.id,
+              role: user.role
             };
-            const jwtCookie = jwt.sign(userInfo, secret);
+            const jwtCookie = jwtmodule.sign(userInfo, secret);
             response.writeHead(302, {
               location: '/',
               'Set-Cookie': `jwt=${jwtCookie}; HttpOnly; Max-Age=90000`
@@ -187,8 +185,8 @@ const postUserHandler = (request, response) => {
     const userData = querystring.parse(body);
     let { username, password } = userData;
 
-    checkUserExists(username, (err, exists) => {
-      if (exists == true) {
+    getUserData(username, (err, res) => {
+      if (!res) {
         response.writeHead(200, {
           'content-type': 'text/plain'
         });
