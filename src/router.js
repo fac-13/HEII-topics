@@ -22,7 +22,7 @@ const router = (request, response) => {
     response.end("You don't have access, please log in");
   };
   const userCookie = request.headers.cookie;
-  const checkJWT = () => {};
+  const checkJWT = () => { };
   if (url === '/') {
     staticHandler(response, '/public/index.html');
     // SEND BACK A COOKIE LOGGED IN OR NOT??
@@ -61,6 +61,8 @@ const router = (request, response) => {
     });
   } else if (url === '/login') {
     loginHandler(request, response);
+  } else if (url === '/registration') {
+    postUserHandler(request, response);
   } else {
     response.writeHead(404, { 'content-type': 'text/plain' });
     response.end('404 error');
