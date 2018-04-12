@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const {
   getData,
-  postData,
+  getUserData,
+  postTopic,
   postVote,
-  checkUserExists,
   postUser
-} = require('./dynamic');
+} = require('./queries');
 const querystring = require('querystring');
 require('env2')('./.env');
 const secret = process.env.SECRET;
@@ -38,23 +38,7 @@ const staticHandler = (response, filepath) => {
 
 const getDataHandler = response => {
   console.log('get to datahandler');
-  const query = `SELECT t.topic_title AS title,
-  t.description,
-  u.username AS author,
-  t.id,
-  COUNT(CASE WHEN v.value = 'yes' THEN 1 ELSE null END) AS yes_votes,
-  COUNT(CASE WHEN v.value = 'no' THEN 1 ELSE null END) AS no_votes,
-  COUNT(c.*) AS comments
-FROM topics t
-LEFT JOIN users u
-ON t.user_id = u.id
-LEFT JOIN voting v
-ON t.id = v.topic_id
-LEFT JOIN comments c
-ON t.id = c.topic_id
-GROUP BY t.id, u.username
-ORDER BY t.id`;
-  getData(query, (err, res) => {
+  getData((err, res) => {
     if (err) {
       console.log('ERROR AT GET DATA HANDLER');
       response.writeHead(500, { 'content-type': 'text/plain' });
@@ -67,7 +51,7 @@ ORDER BY t.id`;
   });
 };
 
-const postDataHandler = (request, response) => {
+const postTopicHandler = (request, response) => {
   let body = '';
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
@@ -76,7 +60,7 @@ const postDataHandler = (request, response) => {
     const topic_title = data.topic_title;
 
     const description = data.description;
-    postData(topic_title, description, (err, res) => {
+    postTopic(topic_title, description, (err, res) => {
       if (err) {
         console.log(err);
         response.writeHead(303, { Location: '/' });
@@ -92,11 +76,6 @@ const postDataHandler = (request, response) => {
 };
 
 const postVoteHandler = (request, response) => {
-  // let topic_id = querystring
-  //   .parse(request.url)
-  //   ['create-vote/?topic'].toLowerCase()
-  //   .trim();
-  // const { topic_id, user_id } = url.parse(request.url);
   let params = querystring.parse(request.url);
   let topic_id = params.topic;
   let user_id = params.user;
@@ -126,34 +105,31 @@ const loginHandler = (request, response) => {
   let body = '';
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
-    const data = querystring.parse(body);
-    checkUserExists(data.username, (err, exists) => {
-      if (exists == true) {
-        getData(
-          `SELECT password, id, role FROM users WHERE username = '${
-          data.username
-          }';`,
-          (err, dbResponse) => {
-            if (dbResponse[0].password == data.password) {
-              const userInfo = {
-                userId: dbResponse[0].id,
-                role: dbResponse[0].role
-              };
-              const jwtCookie = jwt.sign(userInfo, secret);
-
-              response.writeHead(302, {
-                location: '/',
-                'Set-Cookie': `jwt=${jwtCookie}; HttpOnly; Max-Age=90000;`
-              });
-              response.end();
-            } else {
-              response.writeHead(200, {
-                'content-type': 'text/plain'
-              });
-              response.end('password doesnt match db');
-            }
+    const { username, password } = querystring.parse(body);
+    getUserData(username, (err, dbResponse) => {
+      const dbUsername = dbResponse[0].username;
+      const dbPassword = dbResponse[0].password;
+      const { id, role } = dbResponse[0];
+      if (dbUsername) {
+        bcrypt.compare(password, dbPassword, (err, compare) => {
+          if (compare) {
+            const userInfo = {
+              userId: id,
+              role: role
+            };
+            const jwtCookie = jwt.sign(userInfo, secret);
+            response.writeHead(302, {
+              location: '/',
+              'Set-Cookie': `jwt=${jwtCookie}; HttpOnly; Max-Age=90000`
+            });
+            response.end();
+          } else {
+            response.writeHead(200, {
+              'content-type': 'text/plain'
+            });
+            response.end('password doesnt match db');
           }
-        );
+        });
       } else {
         response.writeHead(200, {
           'content-type': 'text/plain'
@@ -200,7 +176,7 @@ const postUserHandler = (request, response) => {
 module.exports = {
   staticHandler,
   getDataHandler,
-  postDataHandler,
+  postTopicHandler,
   postVoteHandler,
   loginHandler,
   postUserHandler

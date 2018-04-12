@@ -1,8 +1,7 @@
-const { getData, postData } = require('./dynamic');
 const {
   staticHandler,
   getDataHandler,
-  postDataHandler,
+  postTopicHandler,
   postVoteHandler,
   loginHandler,
   postUserHandler
@@ -22,7 +21,7 @@ const router = (request, response) => {
     response.end("You don't have access, please log in");
   };
   const userCookie = request.headers.cookie;
-  const checkJWT = () => { };
+  const checkJWT = () => {};
   if (url === '/') {
     staticHandler(response, '/public/index.html');
     // SEND BACK A COOKIE LOGGED IN OR NOT??
@@ -46,7 +45,7 @@ const router = (request, response) => {
             send401();
           } else {
             console.log('alllll good');
-            postDataHandler(request, response);
+            postUserHandler(request, response);
           }
         });
       }
