@@ -4,7 +4,6 @@ const dbConnection = require('./database/db_connection.js');
 // -- GET DATA
 
 const getData = (query, cb) => {
-  console.log('got to getdata');
   dbConnection.query(query, (err, res) => {
     if (err) {
       cb(err);
@@ -45,6 +44,19 @@ const postVote = (topic_id, user_id, value, cb) => {
   );
 };
 
+const checkUserExists = (username, cb) => {
+  return getData(
+    `SELECT * FROM users WHERE username = '${username}';`,
+    (err, res) => {
+      if (res.length > 0) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    }
+  );
+};
+
 const postUser = (username, password, cb) => {
   dbConnection.query(
     'INSERT INTO users (username, password) VALUES ($1, $2)',
@@ -59,4 +71,4 @@ const postUser = (username, password, cb) => {
   );
 };
 
-module.exports = { getData, postData, postVote, postUser };
+module.exports = { getData, postData, postVote, checkUserExists, postUser };

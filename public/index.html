@@ -25,7 +25,8 @@
             </label>
             <p id="reg__usernameErr" class="error"></p>
             <label class="form__label" for="password">Password:
-                <input id="reg__password" class="form__input" type="password" name='password' value='' required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$" />
+                <input id="reg__password" class="form__input" type="password" name='password' value='' required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                />
             </label>
             <label class="form__label" for="confirmPassword">Confirm password:
                 <input id="reg__confirmpassword" class="form__input" id="confirmPassword" type="password" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$"
@@ -38,13 +39,13 @@
     </section>
     <section class="scn__login">
         <h2>Login</h2>
-        <form class="login__form" action="/login" method="post" novalidate>
+        <form class="login__form" action="/login" method="POST" novalidate>
             <label class="form__label" for="username">Username:
-                <input id="lgn__username" class="form__input" type="text" required/>
+                <input id="lgn__username" class="form__input" type="text" name="username" required/>
             </label>
             <p id="lgn__usernameErr" class="error"></p>
             <label class="form__label" for="password">Password:
-                <input id="lgn__password" class="form__input" type="password" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$" />
+                <input id="lgn__password" class="form__input" type="password" name="password" required />
             </label>
             <p id="lgn__confirmErr" class="error" aria-live="polite"></p>
             <button id="login__button">Login</button>

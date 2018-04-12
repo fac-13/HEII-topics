@@ -1,7 +1,17 @@
 const fs = require('fs');
 const path = require('path');
-const { getData, postData, postVote, postUser } = require('./dynamic');
+const {
+  getData,
+  postData,
+  postVote,
+  checkUserExists,
+  postUser
+} = require('./dynamic');
 const querystring = require('querystring');
+require('env2')('./.env');
+const secret = process.env.SECRET;
+const cookie = require('cookie');
+const jwt = require('jsonwebtoken');
 const url = require('url');
 const bcrypt = require('bcryptjs');
 
@@ -61,9 +71,9 @@ const postDataHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const data = querystring.parse(body);
-    console.log('parsed data: ', data);
+
     const topic_title = data.topic_title;
-    console.log(topic_title);
+
     const description = data.description;
     postData(topic_title, description, (err, res) => {
       if (err) {
@@ -72,7 +82,6 @@ const postDataHandler = (request, response) => {
         response.writeHead(500, { 'content-type': 'text/plain' });
         response.end('Something went wrong');
       } else {
-        console.log('reached');
         response.writeHead(200, { 'content-type': 'text/plain' });
         response.writeHead(303, { Location: '/' });
         response.end(`Successfully added ${topic_title}`);
@@ -94,19 +103,61 @@ const postVoteHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const data = querystring.parse(body);
-    console.log('parsed data: ', data);
-    let value = data.vote;
-    postVote(topic_id, user_id, value, (err, res) => {
+
+    let vote_value = data.vote;
+    postVote(topic_id, user_id, vote_value, (err, res) => {
       if (err) {
         console.log(err);
-        response.writeHead(303, { Location: '/' });
         response.writeHead(500, { 'content-type': 'text/plain' });
         response.end('Something went wrong');
       } else {
-        console.log('reached');
-        response.writeHead(200, { 'content-type': 'text/plain' });
-        response.writeHead(303, { Location: '/' });
-        response.end(`Successfully added ${value}`);
+        response.writeHead(303, {
+          Location: '/',
+          'content-type': 'text/plain'
+        });
+        response.end(`Successfully added ${vote_value}`);
+      }
+    });
+  });
+};
+
+const loginHandler = (request, response) => {
+  let body = '';
+  request.on('data', chunk => (body += chunk));
+  request.on('end', () => {
+    const data = querystring.parse(body);
+    checkUserExists(data.username, (err, exists) => {
+      if (exists == true) {
+        getData(
+          `SELECT password, id, role FROM users WHERE username = '${
+            data.username
+          }';`,
+          (err, dbResponse) => {
+            if (dbResponse[0].password == data.password) {
+              const userInfo = {
+                userId: dbResponse[0].id,
+                role: dbResponse[0].role
+              };
+              const jwtCookie = jwt.sign(userInfo, secret);
+
+              response.writeHead(302, {
+                location: '/',
+                'Set-Cookie': `jwt=${jwtCookie}; HttpOnly; Max-Age=90000;`
+              });
+              response.end();
+            } else {
+              response.writeHead(200, {
+                'content-type': 'text/plain'
+              });
+              response.end('password doesnt match db');
+            }
+          }
+        );
+      } else {
+        response.writeHead(200, {
+          'content-type': 'text/plain'
+        });
+        response.end('user doesnt exist');
       }
     });
   });
@@ -150,5 +201,6 @@ module.exports = {
   getDataHandler,
   postDataHandler,
   postVoteHandler,
+  loginHandler,
   postUserHandler
 };
