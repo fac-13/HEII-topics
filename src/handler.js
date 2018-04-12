@@ -15,6 +15,13 @@ const jwt = require('jsonwebtoken');
 const url = require('url');
 const bcrypt = require('bcryptjs');
 
+const send401 = () => {
+  response.writeHead(401, {
+    'Content-Type': 'text/plain'
+  });
+  response.end("You don't have access, please log in");
+};
+
 const staticHandler = (response, filepath) => {
   const extension = filepath.split('.')[1];
   const extensionType = {
@@ -68,59 +75,85 @@ ORDER BY t.id`;
 };
 
 const postDataHandler = (request, response) => {
-  let body = '';
-  request.on('data', chunk => (body += chunk));
-  request.on('end', () => {
-    const data = querystring.parse(body);
+  const userCookie = request.headers.cookie;
 
-    const topic_title = data.topic_title;
+  if (!userCookie) return send401();
+  const { jwt } = cookie.parse(userCookie);
+  if (!jwt) return send401();
+  jwtmodule.verify(jwt, secret, (err, jwt) => {
+    if (err) {
+      send401();
+    } else {
+      let body = '';
+      request.on('data', chunk => (body += chunk));
+      request.on('end', () => {
+        const data = querystring.parse(body);
 
-    const description = data.description;
-    postData(topic_title, description, (err, res) => {
-      if (err) {
-        console.log(err);
-        response.writeHead(303, { Location: '/' });
-        response.writeHead(500, { 'content-type': 'text/plain' });
-        response.end('Something went wrong');
-      } else {
-        response.writeHead(200, { 'content-type': 'text/plain' });
-        response.writeHead(303, { Location: '/' });
-        response.end(`Successfully added ${topic_title}`);
-      }
-    });
+        const topic_title = data.topic_title;
+
+        const description = data.description;
+        postData(topic_title, description, (err, res) => {
+          if (err) {
+            console.log(err);
+            response.writeHead(303, { Location: '/' });
+            response.writeHead(500, { 'content-type': 'text/plain' });
+            response.end('Something went wrong');
+          } else {
+            response.writeHead(200, { 'content-type': 'text/plain' });
+            response.writeHead(303, { Location: '/' });
+            response.end(`Successfully added ${topic_title}`);
+          }
+        });
+      });
+    }
   });
+
+
 };
 
 const postVoteHandler = (request, response) => {
-  // let topic_id = querystring
-  //   .parse(request.url)
-  //   ['create-vote/?topic'].toLowerCase()
-  //   .trim();
-  // const { topic_id, user_id } = url.parse(request.url);
-  let params = querystring.parse(request.url);
-  let topic_id = params.topic;
-  let user_id = params.user;
-  let body = '';
-  request.on('data', chunk => (body += chunk));
-  request.on('end', () => {
-    const data = querystring.parse(body);
 
-    let vote_value = data.vote;
-    postVote(topic_id, user_id, vote_value, (err, res) => {
-      if (err) {
-        console.log(err);
-        response.writeHead(500, { 'content-type': 'text/plain' });
-        response.end('Something went wrong');
-      } else {
-        response.writeHead(303, {
-          Location: '/',
-          'content-type': 'text/plain'
+  const userCookie = request.headers.cookie;
+
+  if (!userCookie) return send401();
+  const { jwt } = cookie.parse(userCookie);
+  if (!jwt) return send401();
+  jwtmodule.verify(jwt, secret, (err, jwt) => {
+    if (err) {
+      send401();
+    } else {
+      // let topic_id = querystring
+      //   .parse(request.url)
+      //   ['create-vote/?topic'].toLowerCase()
+      //   .trim();
+      // const { topic_id, user_id } = url.parse(request.url);
+      let params = querystring.parse(request.url);
+      let topic_id = params.topic;
+      let user_id = params.user;
+      let body = '';
+      request.on('data', chunk => (body += chunk));
+      request.on('end', () => {
+        const data = querystring.parse(body);
+
+        let vote_value = data.vote;
+        postVote(topic_id, user_id, vote_value, (err, res) => {
+          if (err) {
+            console.log(err);
+            response.writeHead(500, { 'content-type': 'text/plain' });
+            response.end('Something went wrong');
+          } else {
+            response.writeHead(303, {
+              Location: '/',
+              'content-type': 'text/plain'
+            });
+            response.end(`Successfully added ${vote_value}`);
+          }
         });
-        response.end(`Successfully added ${vote_value}`);
-      }
-    });
-  });
-};
+
+      });
+    };
+  })
+}
 
 const loginHandler = (request, response) => {
   let body = '';
