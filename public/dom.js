@@ -1,4 +1,19 @@
 (function () {
+  // ERROR MESSAGES
+  var errorMessage = document.getElementById('submitError');
+
+  var displayError = function () {
+    errorMessage.classList.add('is-hidden');
+    if (document.cookie !== "message=OK") {
+      errorMessage.textContent = document.cookie.split('=')[1];
+      errorMessage.classList.remove('is-hidden');
+    }
+  }
+
+
+  errorMessage.classList.add('is-hidden');
+
+
   // FORM VALIDATION
   // login form
   var login__form = document.getElementsByTagName('form')[1];
@@ -55,7 +70,7 @@
       event.preventDefault();
     }
     if (reg__password.value != reg__confirmpassword.value) {
-      error.innerText = 'Passwords do not match';
+      reg__error.innerText = 'Passwords do not match';
       event.preventDefault();
     }
 
@@ -84,6 +99,7 @@
   });
 
   var renderFunc = function (res) {
+    displayError();
     clear(topicResults);
 
     res.reverse();
@@ -141,6 +157,7 @@
       topicResults.appendChild(topicResult);
     });
   };
+
 })();
 
 // -- CALLBACK FUNCTIONS

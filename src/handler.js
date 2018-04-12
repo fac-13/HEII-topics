@@ -18,7 +18,7 @@ const jwtmodule = require('jsonwebtoken');
 const addErrorCookie = (response, errormessage) => {
   response.writeHead(302, {
     'Content-Type': 'text/plain',
-    'Set-Cookie': `error=${errormessage}`,
+    'Set-Cookie': `message=${errormessage}`,
     Location: '/'
   });
   response.end();
@@ -66,11 +66,11 @@ ORDER BY t.id`;
   getData(query, (err, res) => {
     if (err) {
       console.log('ERROR AT GET DATA HANDLER');
-      response.writeHead(500, { 'content-type': 'text/plain' });
+      response.writeHead(500, { 'content-type': 'text/plain', 'Set-Cookie': 'message=OK' });
       response.end('server error');
     } else {
       let output = JSON.stringify(res);
-      response.writeHead(200, { 'content-type': 'application/json' });
+      response.writeHead(200, { 'content-type': 'application/json', 'Set-Cookie': 'message=OK' });
       response.end(output);
     }
   });
@@ -98,12 +98,9 @@ const postDataHandler = (request, response) => {
         postData(topic_title, description, (err, res) => {
           if (err) {
             console.log(err);
-            response.writeHead(303, { Location: '/' });
-            response.writeHead(500, { 'content-type': 'text/plain' });
-            response.end('Something went wrong');
+            addErrorCookie(response, "can't post data, try logging in, error: " + err);
           } else {
-            response.writeHead(200, { 'content-type': 'text/plain' });
-            response.writeHead(303, { Location: '/' });
+            response.writeHead(303, { 'content-type': 'text/plain', 'Set-Cookie': 'message=OK', Location: '/' });
             response.end(`Successfully added ${topic_title}`);
           }
         });
@@ -140,13 +137,12 @@ const postVoteHandler = (request, response) => {
         let vote_value = data.vote;
         postVote(topic_id, user_id, vote_value, (err, res) => {
           if (err) {
-            console.log(err);
-            response.writeHead(500, { 'content-type': 'text/plain' });
-            response.end('Something went wrong');
+            addErrorCookie(response, "can't post data, try logging in, error: " + err);
           } else {
             response.writeHead(303, {
               Location: '/',
-              'content-type': 'text/plain'
+              'content-type': 'text/plain',
+              'Set-Cookie': 'message=OK'
             });
             response.end(`Successfully added ${vote_value}`);
           }
@@ -178,22 +174,16 @@ const loginHandler = (request, response) => {
 
               response.writeHead(302, {
                 location: '/',
-                'Set-Cookie': `jwt=${jwtCookie}; HttpOnly; Max-Age=90000;`
+                'Set-Cookie': [`jwt=${jwtCookie}; HttpOnly; Max-Age=90000;`, 'message=OK']
               });
               response.end();
             } else {
-              response.writeHead(200, {
-                'content-type': 'text/plain'
-              });
-              response.end('password doesnt match db');
+              addErrorCookie(response, "password doesnt match db");
             }
           }
         );
       } else {
-        response.writeHead(200, {
-          'content-type': 'text/plain'
-        });
-        response.end('user doesnt exist');
+        addErrorCookie(response, "user doesnt exist");
       }
     });
   });
@@ -209,10 +199,7 @@ const postUserHandler = (request, response) => {
 
     checkUserExists(username, (err, exists) => {
       if (exists == true) {
-        response.writeHead(200, {
-          'content-type': 'text/plain',
-        });
-        response.end('username already taken');
+        addErrorCookie(response, "username already taken");
       } else {
         bcrypt.hash(password, 8, (err, hashedPassword) => {
           if (err) {
@@ -221,13 +208,13 @@ const postUserHandler = (request, response) => {
           postUser(username, hashedPassword, (err, res) => {
             if (err) {
               console.log(err);
-              response.writeHead(500, { 'content-type': 'text/plain' });
-              response.end('Something went wrong');
+              addErrorCookie(response, "can't post data, something went wrong: " + err);
             } else {
               console.log('posted user to db');
               response.writeHead(303, {
                 Location: '/',
-                'content-type': 'text/plain'
+                'content-type': 'text/plain',
+                'Set-Cookie:': 'message=OK'
               });
               response.end(`Successfully added ${username}`);
             }

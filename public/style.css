@@ -59,3 +59,19 @@ main {
   border-radius: 10px;
   margin: 5px;
 }
+
+/* Submit error */
+.submitError {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.is-hidden {
+  display: none;
+}

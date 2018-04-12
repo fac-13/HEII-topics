@@ -31,7 +31,10 @@ const router = (request, response) => {
   } else if (url === '/registration') {
     postUserHandler(request, response);
   } else {
-    response.writeHead(404, { 'content-type': 'text/plain' });
+    response.writeHead(404, {
+      'content-type': 'text/plain',
+      'Set-Cookie': 'message="OK"'
+    });
     response.end('404 error');
   }
 };
