@@ -1,12 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-const { getData, postData, postVote, checkUserExists } = require('./dynamic');
+const {
+  getData,
+  postData,
+  postVote,
+  checkUserExists,
+  postUser
+} = require('./dynamic');
 const querystring = require('querystring');
-const url = require('url');
 require('env2')('./.env');
 const secret = process.env.SECRET;
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
+const url = require('url');
+const bcrypt = require('bcryptjs');
 
 const staticHandler = (response, filepath) => {
   const extension = filepath.split('.')[1];
@@ -30,18 +37,20 @@ const staticHandler = (response, filepath) => {
 };
 
 const getDataHandler = response => {
-  const query = `SELECT
-  t.id,
-  t.topic_title AS title,
+  console.log('get to datahandler');
+  const query = `SELECT t.topic_title AS title,
   t.description,
   u.username AS author,
-  COUNT(CASE WHEN v.vote_value = true THEN 1 ELSE null END) AS yes_votes,
-  COUNT(CASE WHEN v.vote_value = false THEN 1 ELSE null END) AS no_votes
-FROM voting v
-RIGHT JOIN topic t
-ON t.id = v.topic_id
-INNER JOIN users u
+  COUNT(CASE WHEN v.value = 'yes' THEN 1 ELSE null END) AS yes_votes,
+  COUNT(CASE WHEN v.value = 'no' THEN 1 ELSE null END) AS no_votes,
+  COUNT(c.*) AS comments
+FROM topics t
+LEFT JOIN users u
 ON t.user_id = u.id
+LEFT JOIN voting v
+ON t.id = v.topic_id
+LEFT JOIN comments c
+ON t.id = c.topic_id
 GROUP BY t.id, u.username
 ORDER BY t.id`;
   getData(query, (err, res) => {
@@ -154,10 +163,44 @@ const loginHandler = (request, response) => {
   });
 };
 
+const postUserHandler = (request, response) => {
+  let password;
+  let body = '';
+  request.on('data', chunk => (body += chunk));
+  request.on('end', () => {
+    const userData = querystring.parse(body);
+    console.log('parsed Userdata: ', userData);
+    let { username, password } = userData;
+    bcrypt.hash(password, 8, (err, hashedPassword) => {
+      if (err) {
+        console.log(err);
+      }
+      postUser(username, hashedPassword, (err, res) => {
+        if (err) {
+          console.log(err);
+          response.writeHead(500, { 'content-type': 'text/plain' });
+          response.end('Something went wrong');
+        } else {
+          console.log('posted user to db');
+          response.writeHead(303, {
+            Location: '/',
+            'content-type': 'text/plain'
+          });
+          response.end(`Successfully added ${username}`);
+        }
+      });
+    });
+  });
+  // bcrypt.hash(password, 8, callback)
+  // const comparePasswords = (password, hashedPassword, callback) => {
+  //   bcrypt.compare(password, hashedPassword, callback);
+};
+
 module.exports = {
   staticHandler,
   getDataHandler,
   postDataHandler,
   postVoteHandler,
-  loginHandler
+  loginHandler,
+  postUserHandler
 };

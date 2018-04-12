@@ -4,7 +4,8 @@ const {
   getDataHandler,
   postDataHandler,
   postVoteHandler,
-  loginHandler
+  loginHandler,
+  postUserHandler
 } = require('./handler');
 const cookie = require('cookie');
 const querystring = require('querystring');

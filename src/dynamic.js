@@ -57,4 +57,18 @@ const checkUserExists = (username, cb) => {
   );
 };
 
-module.exports = { getData, postData, postVote, checkUserExists };
+const postUser = (username, password, cb) => {
+  dbConnection.query(
+    'INSERT INTO users (username, password) VALUES ($1, $2)',
+    [username, password],
+    (err, res) => {
+      if (err) {
+        return cb(err);
+      } else {
+        cb(null, res);
+      }
+    }
+  );
+};
+
+module.exports = { getData, postData, postVote, checkUserExist, postUser };
