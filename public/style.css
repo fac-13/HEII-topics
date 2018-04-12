@@ -18,26 +18,39 @@ main {
   align-items: center;
 }
 
-/* form */
 
-.form__label {
+/* registrion form */
+.reg {
+  border-top: 1px solid white;
+}
+
+.reg__label {
   display: block;
 }
 
-.form__input {
+.reg__input {
   display: block;
   width: 80%;
 }
-/* section registrion */
-.scn__registration {
-  border-top: 1px solid white;
-}
 
-/* section login */
-.scn__login {
+/* login form */
+.lgn {
   margin-top: 2rem;
   border-top: 1px solid white;
 }
+
+.lgn__label {
+  display: block;
+}
+
+.lgn__input {
+  display: block;
+  width: 80%;
+}
+
+
+/* add topic form */
+
 
 /* sections topics */
 .scn__topics {
@@ -52,7 +65,7 @@ main {
   width: 100%;
 }
 
-.topic__result {
+.topic {
   width: 50%;
   padding: 1rem;
   border: 3px solid #fff;

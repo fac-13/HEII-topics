@@ -24,12 +24,11 @@ const router = (request, response) => {
   const checkJWT = () => {};
   if (url === '/') {
     staticHandler(response, '/public/index.html');
-    // SEND BACK A COOKIE LOGGED IN OR NOT??
   } else if (url.indexOf('public') !== -1) {
     staticHandler(response, url);
   } else if (url === '/get/topics') {
     getDataHandler(response);
-  } else if (url === '/create-topic') {
+  } else if (url === '/post/topic') {
     postTopicHandler(request, response);
     if (!userCookie) {
       return send401();
