@@ -1,6 +1,5 @@
 (function () {
-  // FORM VALIDATION
-  // login form
+
   var login__form = document.getElementsByTagName('form')[1];
   var login__button = document.getElementById('login__button');
 
@@ -8,6 +7,55 @@
   var lgn__password = document.getElementById('lgn__password');
   var lgn__error = document.getElementById('lgn__confirmErr');
   var lgn__usernameErr = document.getElementById('lgn__usernameErr');
+
+  var errorMessage = document.getElementById('submitError');
+
+  var registration__form = document.getElementsByTagName('form')[0];
+  var registration__button = document.getElementById('registration__button');
+
+  var reg__username = document.getElementById('reg__username');
+  var reg__password = document.getElementById('reg__password');
+  var reg__error = document.getElementById('reg__confirmErr');
+  var reg__confirmpassword = document.getElementById('reg__confirmpassword');
+  var registration__button = document.getElementById('registration__button');
+  var reg__usernameErr = document.getElementById('reg__usernameErr');
+
+  var topicResults = document.querySelector('#js-topic-results');
+
+  var vote__form = document.querySelector('.vote__form');
+  var topic__form = document.querySelector('.form');
+
+
+  var scn__reg = document.querySelector('.scn__registration');
+  var scn__login = document.querySelector('.scn__login');
+
+  // ERROR MESSAGES
+  var displayError = function () {
+    errorMessage.classList.add('is-hidden');
+    if (document.cookie !== "message=OK") {
+      errorMessage.textContent = document.cookie.split('=')[1];
+      errorMessage.classList.remove('is-hidden');
+    }
+  }
+
+  errorMessage.classList.add('is-hidden');
+
+  // WHEN USER IS LOGGED IN
+  //if jwt exists then hide/display etc - WHEN USER IS LOGGED IN
+  var userLoggedIn = function () {
+    scn__reg.classList.add('is-hidden');
+    scn__login.classList.add('is-hidden');
+    vote__form.classList.remove('is-hidden');
+    topic__form.classList.remove('is-hidden');
+  }
+
+  // userLoggedIn();
+
+  // RESET
+
+
+  // FORM VALIDATION
+  // login form
 
   login__form.addEventListener('submit', function (event) {
     lgn__usernameErr.innerText = '';
@@ -25,15 +73,6 @@
   });
 
   // registration form
-  var registration__form = document.getElementsByTagName('form')[0];
-  var registration__button = document.getElementById('registration__button');
-
-  var reg__username = document.getElementById('reg__username');
-  var reg__password = document.getElementById('reg__password');
-  var reg__error = document.getElementById('reg__confirmErr');
-  var reg__confirmpassword = document.getElementById('reg__confirmpassword');
-  var registration__button = document.getElementById('registration__button');
-  var reg__usernameErr = document.getElementById('reg__usernameErr');
 
   registration__form.addEventListener('submit', function (event) {
     reg__usernameErr.innerText = '';
@@ -70,7 +109,6 @@
 
   // RENDERING ETC
   var user_id = 1;
-  var topicResults = document.querySelector('#js-topic-results');
 
   var clear = function (parent) {
     while (parent.firstChild) {
@@ -84,6 +122,8 @@
   });
 
   var renderFunc = function (res) {
+    displayError();
+
     clear(topicResults);
 
     res.reverse();
@@ -103,7 +143,7 @@
       //radio form
       var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
         obj.id
-        }&user=${user_id}' class='vote__form'>
+        }&user=${user_id}' class='vote__form is-hidden'>
       <input type='radio' name='vote' value='true' class='voting__yes'>
       <label for='voting__yes'> Yay! </label>
       <input type='radio' name='vote' value='false' class='voting__no'>
