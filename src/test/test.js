@@ -14,51 +14,44 @@ tape('getData returns array', t => {
     let query = 'SELECT * FROM topics';
     getData(query, (err, res) => {
       if (err) t.fail(err);
-
-      // return JSON.stringify(res);,
-      //  your test goes here
       t.equals(Array.isArray(res), true, 'type of res should be array');
       t.end();
     });
   });
 });
 
-// tape('getData returns array of objects', t => {
-//   runDbBuild((err, res) => {
-//     let query = 'SELECT * FROM topics';
-//     getData(query, (err, res) => {
-//       if (err) t.fail(err);
+tape('getData returns array of objects', t => {
+  runDbBuild((err, res) => {
+    let query = 'SELECT * FROM topics';
+    getData(query, (err, res) => {
+      t.equals(
+        typeof res[0],
+        'object',
+        'type of res should be array of objects'
+      );
+      t.end();
+    });
+  });
+});
 
-//       // return JSON.stringify(res);,
-//       //  your test goes here
-//       t.equals(
-//         typeof res[0],
-//         'object',
-//         'type of res should be array of objects'
-//       );
-//       t.end();
-//     });
-//   });
-// });
-
-// tape('deepEquals of getData', t => {
-//   runDbBuild((err, res) => {
-//     let query = 'SELECT * FROM topics';
-//     getData(query, (err, res) => {
-//       if (err) t.fail(err);
-//       let expected = [
-//         {
-//           id: 1,
-//           topic_title: 'Climbing',
-//           description: 'Shall we do this friday?',
-//           user_id: 1
-//         }
-//       ];
-//       t.deepEquals(res, expected, `should return ${expected}`);
-//       t.end();
-//     });
-//   });
-// });
+tape('deepEquals of getData', t => {
+  runDbBuild((err, res) => {
+    let query = 'SELECT * FROM topics';
+    getData(query, (err, res) => {
+      if (err) t.fail(err);
+      let expected = [
+        {
+          id: 1,
+          topic_title: 'Climbing',
+          description: 'Shall we do this friday?',
+          user_id: 1
+        }
+      ];
+      t.deepEquals(res, expected, `should return ${expected}`);
+      t.end();
+    });
+  });
+});
 
 // // checks userexists func
 // tape('checks checkUserExists', t => {
@@ -84,12 +77,12 @@ tape('getData returns array', t => {
 // });
 
 // // POST DATA TESTS
-// tape('testing postData', t => {
-//   runDbBuild((err, res) => {
-//     postData('hello', 'world', (err, res) => {
-//       if (err) t.fail(err);
-//       t.equal(res.command, 'INSERT', 'should call INSERT command');
-//       t.end();
-//     });
-//   });
-// });
+tape('testing postData', t => {
+  runDbBuild((err, res) => {
+    postData('hello', 'world', (err, res) => {
+      if (err) t.fail(err);
+      t.equal(res.command, 'INSERT', 'should call INSERT command');
+      t.end();
+    });
+  });
+});
