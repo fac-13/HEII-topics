@@ -10,6 +10,7 @@ const cookie = require('cookie');
 const querystring = require('querystring');
 require('env2')('./.env');
 const secret = process.env.SECRET;
+const jwtmodule = require('jsonwebtoken');
 
 const router = (request, response) => {
   const url = request.url;

@@ -66,10 +66,12 @@ const postTopicHandler = (request, response) => {
   const { jwt } = cookie.parse(userCookie);
   if (!jwt) return addErrorCookie(response, 'need to log in');
   jwtmodule.verify(jwt, secret, (err, jwt) => {
+    console.log(jwt);
+
     if (err) {
       return addErrorCookie(
         response,
-        'error valiating you, clear cache and login again'
+        'error validating you, clear cache and login again'
       );
     } else {
       let body = '';

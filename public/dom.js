@@ -1,4 +1,4 @@
-(function () {
+(function() {
   // FORM VALIDATION
   // login form
   var login__form = document.getElementsByTagName('form')[1];
@@ -9,7 +9,7 @@
   var lgn__error = document.getElementById('lgn__confirmErr');
   var lgn__usernameErr = document.getElementById('lgn__usernameErr');
 
-  login__form.addEventListener('submit', function (event) {
+  login__form.addEventListener('submit', function(event) {
     lgn__usernameErr.innerText = '';
     lgn__error.innerText = '';
 
@@ -35,7 +35,7 @@
   var registration__button = document.getElementById('registration__button');
   var reg__usernameErr = document.getElementById('reg__usernameErr');
 
-  registration__form.addEventListener('submit', function (event) {
+  registration__form.addEventListener('submit', function(event) {
     reg__usernameErr.innerText = '';
     reg__error.innerText = '';
 
@@ -72,22 +72,22 @@
   var user_id = 1;
   var topicResults = document.querySelector('#js-topic-results');
 
-  var clear = function (parent) {
+  var clear = function(parent) {
     while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
     }
   };
 
-  utility.fetch('/get/topics', function (err, res) {
+  utility.fetch('/get/topics', function(err, res) {
     if (err) console.log(err);
     renderFunc(res);
   });
 
-  var renderFunc = function (res) {
+  var renderFunc = function(res) {
     clear(topicResults);
 
     res.reverse();
-    res.forEach(function (obj) {
+    res.forEach(function(obj) {
       var topicResult = document.createElement('div');
       topicResult.classList.add('topic__result');
       var topicTitle = document.createElement('h2');
@@ -96,6 +96,8 @@
       topicUsername.classList.add('topic__username');
       var topicDescription = document.createElement('p');
       topicDescription.classList.add('topic__description');
+      var topicAuthor = document.createElement('p');
+      topicDescription.classList.add('topic__author');
 
       var topicVote = document.createElement('div');
       topicVote.classList.add('vote');
@@ -103,7 +105,7 @@
       //radio form
       var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
         obj.id
-        }&user=${user_id}' class='vote__form'>
+      }&user=${user_id}' class='vote__form'>
       <input type='radio' name='vote' value='true' class='voting__yes'>
       <label for='voting__yes'> Yay! </label>
       <input type='radio' name='vote' value='false' class='voting__no'>
@@ -124,6 +126,7 @@
       topicTitle.textContent = obj.title;
       topicUsername.textContent = obj.username;
       topicDescription.textContent = obj.description;
+      topicAuthor.textContent = obj.author;
       yesVote.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
       noVote.textContent = 'no votes: ' + obj.no_votes;
       comments.textContent = 'Comments: ' + obj.comments;
@@ -131,6 +134,7 @@
       topicResult.appendChild(topicTitle);
       topicResult.appendChild(topicUsername);
       topicResult.appendChild(topicDescription);
+      topicResult.appendChild(topicAuthor);
 
       voteNumbers.appendChild(yesVote);
       voteNumbers.appendChild(noVote);
