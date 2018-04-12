@@ -41,6 +41,7 @@ const getDataHandler = response => {
   const query = `SELECT t.topic_title AS title,
   t.description,
   u.username AS author,
+  t.id,
   COUNT(CASE WHEN v.value = 'yes' THEN 1 ELSE null END) AS yes_votes,
   COUNT(CASE WHEN v.value = 'no' THEN 1 ELSE null END) AS no_votes,
   COUNT(c.*) AS comments
@@ -130,7 +131,7 @@ const loginHandler = (request, response) => {
       if (exists == true) {
         getData(
           `SELECT password, id, role FROM users WHERE username = '${
-            data.username
+          data.username
           }';`,
           (err, dbResponse) => {
             if (dbResponse[0].password == data.password) {
