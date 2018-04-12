@@ -71,4 +71,4 @@ const postUser = (username, password, cb) => {
   );
 };
 
-module.exports = { getData, postData, postVote, checkUserExist, postUser };
+module.exports = { getData, postData, postVote, checkUserExists, postUser };
