@@ -4,7 +4,9 @@
 
 
 ```
-SELECT t.topic_title AS title,
+SELECT
+  t.id,
+  t.topic_title AS title,
   t.description,
   u.username AS author,
   COUNT(CASE WHEN v.value = 'yes' THEN 1 ELSE null END) AS yes_votes,
