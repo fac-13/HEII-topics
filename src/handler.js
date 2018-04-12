@@ -170,32 +170,43 @@ const postUserHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const userData = querystring.parse(body);
-    console.log('parsed Userdata: ', userData);
     let { username, password } = userData;
-    bcrypt.hash(password, 8, (err, hashedPassword) => {
-      if (err) {
-        console.log(err);
-      }
-      postUser(username, hashedPassword, (err, res) => {
-        if (err) {
-          console.log(err);
-          response.writeHead(500, { 'content-type': 'text/plain' });
-          response.end('Something went wrong');
-        } else {
-          console.log('posted user to db');
-          response.writeHead(303, {
-            Location: '/',
-            'content-type': 'text/plain'
+
+    checkUserExists(username, (err, exists) => {
+      if (exists == true) {
+        response.writeHead(200, {
+          'content-type': 'text/plain',
+        });
+        response.end('username already taken');
+      } else {
+        bcrypt.hash(password, 8, (err, hashedPassword) => {
+          if (err) {
+            console.log(err);
+          }
+          postUser(username, hashedPassword, (err, res) => {
+            if (err) {
+              console.log(err);
+              response.writeHead(500, { 'content-type': 'text/plain' });
+              response.end('Something went wrong');
+            } else {
+              console.log('posted user to db');
+              response.writeHead(303, {
+                Location: '/',
+                'content-type': 'text/plain'
+              });
+              response.end(`Successfully added ${username}`);
+            }
           });
-          response.end(`Successfully added ${username}`);
-        }
-      });
+        });
+      }
     });
   });
-  // bcrypt.hash(password, 8, callback)
-  // const comparePasswords = (password, hashedPassword, callback) => {
-  //   bcrypt.compare(password, hashedPassword, callback);
 };
+
+// bcrypt.hash(password, 8, callback)
+// const comparePasswords = (password, hashedPassword, callback) => {
+//   bcrypt.compare(password, hashedPassword, callback);
+
 
 module.exports = {
   staticHandler,
