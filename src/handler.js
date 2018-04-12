@@ -3,6 +3,7 @@ const path = require('path');
 const {
   getData,
   getUserData,
+  getComments,
   postTopic,
   postVote,
   postUser
@@ -53,9 +54,18 @@ const getDataHandler = response => {
       response.writeHead(500, { 'content-type': 'text/plain' });
       response.end('server error');
     } else {
-      let output = JSON.stringify(res);
-      response.writeHead(200, { 'content-type': 'application/json' });
-      response.end(output);
+      let itemsProcessed = 0;
+      res.forEach((e, index, array) => {
+        getComments(e.id, (err, dbComments) => {
+          itemsProcessed++;
+          e.comments = dbComments;
+          if ((itemsProcessed = array.length)) {
+            let output = JSON.stringify(res);
+            response.writeHead(200, { 'content-type': 'application/json' });
+            response.end(output);
+          }
+        });
+      });
     }
   });
 };
@@ -65,9 +75,7 @@ const postTopicHandler = (request, response) => {
   if (!userCookie) return addErrorCookie(response, 'need to log in');
   const { jwt } = cookie.parse(userCookie);
   if (!jwt) return addErrorCookie(response, 'need to log in');
-  jwtmodule.verify(jwt, secret, (err, jwt) => {
-    console.log(jwt);
-
+  jwtmodule.verify(jwt, secret, (err, jwtRes) => {
     if (err) {
       return addErrorCookie(
         response,
@@ -80,7 +88,7 @@ const postTopicHandler = (request, response) => {
         const data = querystring.parse(body);
         const topic_title = data.topic_title;
         const description = data.description;
-        postTopic(topic_title, description, (err, res) => {
+        postTopic(topic_title, description, jwtRes.userId, (err, res) => {
           if (err) {
             console.log(err);
             response.writeHead(500, { 'content-type': 'text/plain' });
@@ -103,11 +111,12 @@ const postVoteHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const data = querystring.parse(body);
+    const userCookie = request.headers.cookie;
 
     if (!userCookie) return addErrorCookie(response, 'need to log in');
     const { jwt } = cookie.parse(userCookie);
     if (!jwt) return addErrorCookie(response, 'need to log in');
-    jwtmodule.verify(jwt, secret, (err, jwt) => {
+    jwtmodule.verify(jwt, secret, (err, jwtRes) => {
       if (err) {
         return addErrorCookie(
           response,

@@ -12,7 +12,7 @@ const getData = cb => {
       u.username AS author,
       COUNT(CASE WHEN v.value = 'yes' THEN 1 ELSE null END) AS yes_votes,
       COUNT(CASE WHEN v.value = 'no' THEN 1 ELSE null END) AS no_votes,
-      COUNT(c.*) AS comments
+      COUNT(c.*) num_comments
     FROM topics t
     LEFT JOIN users u
     ON t.user_id = u.id
@@ -47,12 +47,27 @@ const getUserData = (username, cb) => {
     }
   );
 };
+
+const getComments = (topic_id, cb) => {
+  dbConnection.query(
+    'SELECT * FROM comments WHERE topic_id = $1',
+    [topic_id],
+    (err, res) => {
+      if (err) {
+        cb(err);
+        console.log('error HAPPENED');
+      } else {
+        cb(null, res.rows);
+      }
+    }
+  );
+};
 // -- POST DATA
 
-const postTopic = (topic_title, description, cb) => {
+const postTopic = (topic_title, description, user_id, cb) => {
   dbConnection.query(
-    'INSERT INTO topics (topic_title, description, user_id) VALUES ($1, $2, 1)',
-    [topic_title, description],
+    'INSERT INTO topics (topic_title, description, user_id) VALUES ($1, $2, $3)',
+    [topic_title, description, user_id],
     (err, res) => {
       if (err) {
         return cb(err);
@@ -94,6 +109,7 @@ const postUser = (username, password, cb) => {
 module.exports = {
   getData,
   getUserData,
+  getComments,
   postTopic,
   postVote,
   postUser

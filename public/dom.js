@@ -81,6 +81,7 @@
   utility.fetch('/get/topics', function(err, res) {
     if (err) console.log(err);
     renderFunc(res);
+    console.log(res);
   });
 
   var renderFunc = function(res) {
@@ -88,21 +89,21 @@
 
     res.reverse();
     res.forEach(function(obj) {
+      // create container
       var topicResult = document.createElement('div');
       topicResult.classList.add('topic__result');
+      // create title, description and author
       var topicTitle = document.createElement('h2');
       topicTitle.classList.add('topic__title');
-      var topicUsername = document.createElement('div');
-      topicUsername.classList.add('topic__username');
       var topicDescription = document.createElement('p');
       topicDescription.classList.add('topic__description');
       var topicAuthor = document.createElement('p');
       topicDescription.classList.add('topic__author');
 
+      // create vote container
       var topicVote = document.createElement('div');
       topicVote.classList.add('vote');
-
-      //radio form
+      //create radio form
       var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
         obj.id
       }&user=${user_id}' class='vote__form'>
@@ -114,12 +115,14 @@
       </form>`;
       topicVote.insertAdjacentHTML('beforeend', radioForm);
 
+      // create voting chart
       var voteNumbers = document.createElement('div');
       voteNumbers.classList.add('topicvotes');
       var yesVote = document.createElement('span');
       yesVote.classList.add('topicyes');
       var noVote = document.createElement('span');
       noVote.classList.add('topic__no');
+
       var comments = document.createElement('span');
       comments.classList.add('topic__comments');
 
@@ -129,7 +132,7 @@
       topicAuthor.textContent = obj.author;
       yesVote.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
       noVote.textContent = 'no votes: ' + obj.no_votes;
-      comments.textContent = 'Comments: ' + obj.comments;
+      comments.textContent = 'Comments: ' + obj.num_comments;
 
       topicResult.appendChild(topicTitle);
       topicResult.appendChild(topicUsername);
