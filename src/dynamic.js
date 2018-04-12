@@ -45,4 +45,18 @@ const postVote = (topic_id, user_id, value, cb) => {
   );
 };
 
-module.exports = { getData, postData, postVote };
+const postUser = (username, password, cb) => {
+  dbConnection.query(
+    'INSERT INTO users (username, password) VALUES ($1, $2)',
+    [username, password],
+    (err, res) => {
+      if (err) {
+        return cb(err);
+      } else {
+        cb(null, res);
+      }
+    }
+  );
+};
+
+module.exports = { getData, postData, postVote, postUser };
