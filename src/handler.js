@@ -11,9 +11,18 @@ const querystring = require('querystring');
 require('env2')('./.env');
 const secret = process.env.SECRET;
 const cookie = require('cookie');
-const jwt = require('jsonwebtoken');
 const url = require('url');
 const bcrypt = require('bcryptjs');
+const jwtmodule = require('jsonwebtoken');
+
+const addErrorCookie = (response, errormessage) => {
+  response.writeHead(302, {
+    'Content-Type': 'text/plain',
+    'Set-Cookie': `error=${errormessage}`,
+    Location: '/'
+  });
+  response.end();
+};
 
 const staticHandler = (response, filepath) => {
   const extension = filepath.split('.')[1];
@@ -68,59 +77,85 @@ ORDER BY t.id`;
 };
 
 const postDataHandler = (request, response) => {
-  let body = '';
-  request.on('data', chunk => (body += chunk));
-  request.on('end', () => {
-    const data = querystring.parse(body);
 
-    const topic_title = data.topic_title;
+  const userCookie = request.headers.cookie;
 
-    const description = data.description;
-    postData(topic_title, description, (err, res) => {
-      if (err) {
-        console.log(err);
-        response.writeHead(303, { Location: '/' });
-        response.writeHead(500, { 'content-type': 'text/plain' });
-        response.end('Something went wrong');
-      } else {
-        response.writeHead(200, { 'content-type': 'text/plain' });
-        response.writeHead(303, { Location: '/' });
-        response.end(`Successfully added ${topic_title}`);
-      }
-    });
+  if (!userCookie) return addErrorCookie(response, "need to log in");
+  const { jwt } = cookie.parse(userCookie);
+  if (!jwt) return addErrorCookie(response, "need to log in");
+  jwtmodule.verify(jwt, secret, (err, jwt) => {
+    if (err) {
+      return addErrorCookie(response, "error valiating you, clear cache and login again");
+    } else {
+      let body = '';
+      request.on('data', chunk => (body += chunk));
+      request.on('end', () => {
+        const data = querystring.parse(body);
+
+        const topic_title = data.topic_title;
+
+        const description = data.description;
+        postData(topic_title, description, (err, res) => {
+          if (err) {
+            console.log(err);
+            response.writeHead(303, { Location: '/' });
+            response.writeHead(500, { 'content-type': 'text/plain' });
+            response.end('Something went wrong');
+          } else {
+            response.writeHead(200, { 'content-type': 'text/plain' });
+            response.writeHead(303, { Location: '/' });
+            response.end(`Successfully added ${topic_title}`);
+          }
+        });
+      });
+    }
   });
+
+
 };
 
 const postVoteHandler = (request, response) => {
-  // let topic_id = querystring
-  //   .parse(request.url)
-  //   ['create-vote/?topic'].toLowerCase()
-  //   .trim();
-  // const { topic_id, user_id } = url.parse(request.url);
-  let params = querystring.parse(request.url);
-  let topic_id = params.topic;
-  let user_id = params.user;
-  let body = '';
-  request.on('data', chunk => (body += chunk));
-  request.on('end', () => {
-    const data = querystring.parse(body);
+  const userCookie = request.headers.cookie;
 
-    let vote_value = data.vote;
-    postVote(topic_id, user_id, vote_value, (err, res) => {
-      if (err) {
-        console.log(err);
-        response.writeHead(500, { 'content-type': 'text/plain' });
-        response.end('Something went wrong');
-      } else {
-        response.writeHead(303, {
-          Location: '/',
-          'content-type': 'text/plain'
+  if (!userCookie) return addErrorCookie(response, "need to log in");
+  const { jwt } = cookie.parse(userCookie);
+  if (!jwt) return addErrorCookie(response, "need to log in");
+  jwtmodule.verify(jwt, secret, (err, jwt) => {
+    if (err) {
+      return addErrorCookie(response, "error valiating you, clear cache and login again");
+    } else {
+      // let topic_id = querystring
+      //   .parse(request.url)
+      //   ['create-vote/?topic'].toLowerCase()
+      //   .trim();
+      // const { topic_id, user_id } = url.parse(request.url);
+      let params = querystring.parse(request.url);
+      let topic_id = params.topic;
+      let user_id = params.user;
+      let body = '';
+      request.on('data', chunk => (body += chunk));
+      request.on('end', () => {
+        const data = querystring.parse(body);
+
+        let vote_value = data.vote;
+        postVote(topic_id, user_id, vote_value, (err, res) => {
+          if (err) {
+            console.log(err);
+            response.writeHead(500, { 'content-type': 'text/plain' });
+            response.end('Something went wrong');
+          } else {
+            response.writeHead(303, {
+              Location: '/',
+              'content-type': 'text/plain'
+            });
+            response.end(`Successfully added ${vote_value}`);
+          }
         });
-        response.end(`Successfully added ${vote_value}`);
-      }
-    });
-  });
-};
+
+      });
+    };
+  })
+}
 
 const loginHandler = (request, response) => {
   let body = '';
@@ -139,7 +174,7 @@ const loginHandler = (request, response) => {
                 userId: dbResponse[0].id,
                 role: dbResponse[0].role
               };
-              const jwtCookie = jwt.sign(userInfo, secret);
+              const jwtCookie = jwtmodule.sign(userInfo, secret);
 
               response.writeHead(302, {
                 location: '/',
@@ -170,32 +205,43 @@ const postUserHandler = (request, response) => {
   request.on('data', chunk => (body += chunk));
   request.on('end', () => {
     const userData = querystring.parse(body);
-    console.log('parsed Userdata: ', userData);
     let { username, password } = userData;
-    bcrypt.hash(password, 8, (err, hashedPassword) => {
-      if (err) {
-        console.log(err);
-      }
-      postUser(username, hashedPassword, (err, res) => {
-        if (err) {
-          console.log(err);
-          response.writeHead(500, { 'content-type': 'text/plain' });
-          response.end('Something went wrong');
-        } else {
-          console.log('posted user to db');
-          response.writeHead(303, {
-            Location: '/',
-            'content-type': 'text/plain'
+
+    checkUserExists(username, (err, exists) => {
+      if (exists == true) {
+        response.writeHead(200, {
+          'content-type': 'text/plain',
+        });
+        response.end('username already taken');
+      } else {
+        bcrypt.hash(password, 8, (err, hashedPassword) => {
+          if (err) {
+            console.log(err);
+          }
+          postUser(username, hashedPassword, (err, res) => {
+            if (err) {
+              console.log(err);
+              response.writeHead(500, { 'content-type': 'text/plain' });
+              response.end('Something went wrong');
+            } else {
+              console.log('posted user to db');
+              response.writeHead(303, {
+                Location: '/',
+                'content-type': 'text/plain'
+              });
+              response.end(`Successfully added ${username}`);
+            }
           });
-          response.end(`Successfully added ${username}`);
-        }
-      });
+        });
+      }
     });
   });
-  // bcrypt.hash(password, 8, callback)
-  // const comparePasswords = (password, hashedPassword, callback) => {
-  //   bcrypt.compare(password, hashedPassword, callback);
 };
+
+// bcrypt.hash(password, 8, callback)
+// const comparePasswords = (password, hashedPassword, callback) => {
+//   bcrypt.compare(password, hashedPassword, callback);
+
 
 module.exports = {
   staticHandler,
