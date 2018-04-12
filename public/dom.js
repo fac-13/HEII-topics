@@ -1,4 +1,5 @@
 (function() {
+  var errorMessage = document.getElementById('submitError');
   // FORM VALIDATION
   // login form
   var login__form = document.getElementsByTagName('form')[1];
@@ -55,7 +56,7 @@
       event.preventDefault();
     }
     if (reg__password.value != reg__confirmpassword.value) {
-      error.innerText = 'Passwords do not match';
+      reg__error.innerText = 'Passwords do not match';
       event.preventDefault();
     }
 
@@ -78,15 +79,19 @@
     }
   };
 
-  utility.fetch('/get/topics', function(err, res) {
-    if (err) console.log(err);
-    renderFunc(res);
-    console.log(res);
-  });
+  var displayError = function() {
+    errorMessage.classList.add('is-hidden');
+    if (document.cookie !== 'message=OK' && document.cookie) {
+      errorMessage.textContent = document.cookie.split('=')[1];
+      errorMessage.classList.remove('is-hidden');
+    }
+  };
+
+  errorMessage.classList.add('is-hidden');
 
   var renderFunc = function(res) {
     clear(topicResults);
-
+    displayError();
     res.reverse();
     res.forEach(function(obj) {
       // create container
@@ -103,7 +108,8 @@
       // create vote container
       var topicVote = document.createElement('div');
       topicVote.classList.add('vote');
-      //create radio form
+
+      //radio form
       var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
         obj.id
       }&user=${user_id}' class='vote__form'>
@@ -127,7 +133,6 @@
       comments.classList.add('topic__comments');
 
       topicTitle.textContent = obj.title;
-      topicUsername.textContent = obj.username;
       topicDescription.textContent = obj.description;
       topicAuthor.textContent = obj.author;
       yesVote.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
@@ -135,7 +140,6 @@
       comments.textContent = 'Comments: ' + obj.num_comments;
 
       topicResult.appendChild(topicTitle);
-      topicResult.appendChild(topicUsername);
       topicResult.appendChild(topicDescription);
       topicResult.appendChild(topicAuthor);
 
@@ -148,6 +152,11 @@
       topicResults.appendChild(topicResult);
     });
   };
+
+  utility.fetch('/get/topics', function(err, res) {
+    if (err) console.log(err);
+    renderFunc(res);
+  });
 })();
 
 // -- CALLBACK FUNCTIONS

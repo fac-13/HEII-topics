@@ -44,7 +44,7 @@ tape('deepEquals of getData', t => {
           author: 'Helen',
           yes_votes: '1',
           no_votes: '0',
-          comments: '1'
+          num_comments: '1'
         }
       ];
       t.deepEquals(res, expected, `should return ${expected}`);
@@ -56,7 +56,7 @@ tape('deepEquals of getData', t => {
 // // POST DATA TESTS
 tape('testing postData', t => {
   runDbBuild((err, res) => {
-    postTopic('hello', 'world', (err, res) => {
+    postTopic('hello', 'world', 1, (err, res) => {
       if (err) t.fail(err);
       t.equal(res.command, 'INSERT', 'should call INSERT command');
       t.end();
