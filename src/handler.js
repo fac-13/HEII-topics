@@ -11,15 +11,17 @@ const querystring = require('querystring');
 require('env2')('./.env');
 const secret = process.env.SECRET;
 const cookie = require('cookie');
-const jwt = require('jsonwebtoken');
 const url = require('url');
 const bcrypt = require('bcryptjs');
+const jwtmodule = require('jsonwebtoken');
 
-const send401 = () => {
-  response.writeHead(401, {
-    'Content-Type': 'text/plain'
+const addErrorCookie = (response, errormessage) => {
+  response.writeHead(302, {
+    'Content-Type': 'text/plain',
+    'Set-Cookie': `error=${errormessage}`,
+    Location: '/'
   });
-  response.end("You don't have access, please log in");
+  response.end();
 };
 
 const staticHandler = (response, filepath) => {
@@ -75,14 +77,15 @@ ORDER BY t.id`;
 };
 
 const postDataHandler = (request, response) => {
+
   const userCookie = request.headers.cookie;
 
-  if (!userCookie) return send401();
+  if (!userCookie) return addErrorCookie(response, "need to log in");
   const { jwt } = cookie.parse(userCookie);
-  if (!jwt) return send401();
+  if (!jwt) return addErrorCookie(response, "need to log in");
   jwtmodule.verify(jwt, secret, (err, jwt) => {
     if (err) {
-      send401();
+      return addErrorCookie(response, "error valiating you, clear cache and login again");
     } else {
       let body = '';
       request.on('data', chunk => (body += chunk));
@@ -112,15 +115,14 @@ const postDataHandler = (request, response) => {
 };
 
 const postVoteHandler = (request, response) => {
-
   const userCookie = request.headers.cookie;
 
-  if (!userCookie) return send401();
+  if (!userCookie) return addErrorCookie(response, "need to log in");
   const { jwt } = cookie.parse(userCookie);
-  if (!jwt) return send401();
+  if (!jwt) return addErrorCookie(response, "need to log in");
   jwtmodule.verify(jwt, secret, (err, jwt) => {
     if (err) {
-      send401();
+      return addErrorCookie(response, "error valiating you, clear cache and login again");
     } else {
       // let topic_id = querystring
       //   .parse(request.url)
@@ -172,7 +174,7 @@ const loginHandler = (request, response) => {
                 userId: dbResponse[0].id,
                 role: dbResponse[0].role
               };
-              const jwtCookie = jwt.sign(userInfo, secret);
+              const jwtCookie = jwtmodule.sign(userInfo, secret);
 
               response.writeHead(302, {
                 location: '/',
