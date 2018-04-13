@@ -4,7 +4,7 @@ var utility = {
   addListener: function(selector, eventName, cb) {
     document.querySelector(selector).addEventListener(eventName, cb);
   },
-  //   -- FETCH requests
+  // -- FETCH REQUESTS
   fetch: function(url, cb) {
     var xhr = new XMLHttpRequest();
 

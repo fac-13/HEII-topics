@@ -1,77 +1,74 @@
 (function() {
   var errorMessage = document.getElementById('submitError');
+
   // FORM VALIDATION
-  // login form
-  var login__form = document.getElementsByTagName('form')[1];
-  var login__button = document.getElementById('login__button');
-
-  var lgn__username = document.getElementById('lgn__username');
-  var lgn__password = document.getElementById('lgn__password');
-  var lgn__error = document.getElementById('lgn__confirmErr');
-  var lgn__usernameErr = document.getElementById('lgn__usernameErr');
-
-  login__form.addEventListener('submit', function(event) {
-    lgn__usernameErr.innerText = '';
-    lgn__error.innerText = '';
-
-    if (lgn__password.validity.valueMissing) {
-      lgn__error.innerText = 'Please enter a password';
-      event.preventDefault();
-    }
-
-    if (lgn__username.validity.valueMissing) {
-      lgn__usernameErr.innerText = 'Please enter an username';
-      event.preventDefault();
-    }
-  });
 
   // registration form
-  var registration__form = document.getElementsByTagName('form')[0];
-  var registration__button = document.getElementById('registration__button');
+  var regForm = document.querySelector('.js-reg-form');
 
-  var reg__username = document.getElementById('reg__username');
-  var reg__password = document.getElementById('reg__password');
-  var reg__error = document.getElementById('reg__confirmErr');
-  var reg__confirmpassword = document.getElementById('reg__confirmpassword');
-  var registration__button = document.getElementById('registration__button');
-  var reg__usernameErr = document.getElementById('reg__usernameErr');
+  var regUsername = document.querySelector('.js-reg-username');
+  var regUsernameErr = document.querySelector('.js-reg-username-err');
 
-  registration__form.addEventListener('submit', function(event) {
-    reg__usernameErr.innerText = '';
-    reg__error.innerText = '';
+  var regPassword = document.querySelector('.js-reg-password');
+  var regConfirm = document.querySelector('.js-reg-confirm');
+  var regPasswordError = document.querySelector('.js-reg-password-err');
 
-    if (
-      reg__password.validity.valueMissing ||
-      reg__confirmpassword.validity.valueMissing
-    ) {
-      reg__error.innerText = 'Please enter a password';
+  var regSubmit = document.querySelector('.js-reg-submit');
+
+  regForm.addEventListener('submit', function(event) {
+    regUsernameErr.innerText = '';
+    regPasswordError.innerText = '';
+    if (regUsername.validity.valueMissing) {
+      regUsernameErr.innerText = 'Please enter an username';
+      event.preventDefault();
+    }
+    if (regPassword.validity.valueMissing || regConfirm.validity.valueMissing) {
+      regPasswordError.innerText = 'Please enter a password';
       event.preventDefault();
     }
     if (
-      reg__password.validity.patternMismatch ||
-      reg__confirmpassword.validity.patternMismatch
+      regPassword.validity.patternMismatch ||
+      regConfirm.validity.patternMismatch
     ) {
-      reg__error.innerText =
+      regPasswordError.innerText =
         'Password should contain at least eight characters, including one uppercase letter, one lowercase letter and one number';
       event.preventDefault();
     }
-    if (reg__password.value != reg__confirmpassword.value) {
-      reg__error.innerText = 'Passwords do not match';
+    if (regPassword.value != regConfirm.value) {
+      regPasswordError.innerText = 'Passwords do not match';
       event.preventDefault();
     }
-
-    if (reg__username.validity.valueMissing) {
-      reg__usernameErr.innerText = 'Please enter an username';
-      event.preventDefault();
-    }
-
     // error handling if username input already exists on database
-    //     - with reg__usernameErr.innerText = "username already taken"
+    //     - with regUsernameErr.innerText = "username already taken"
+  });
+
+  // login form
+  var lgnForm = document.querySelector('.js-lgn-form');
+
+  var lgnUsername = document.querySelector('.js-lgn-username');
+  var lgnUsernameErr = document.querySelector('.js-lgn-username-err');
+
+  var lgnPassword = document.querySelector('.js-lgn-password');
+  var lgnPasswordErr = document.querySelector('.js-lgn-password-err');
+
+  var lgnSubmit = document.querySelector('.js-lgn-submit');
+
+  lgnForm.addEventListener('submit', function(event) {
+    lgnUsernameErr.innerText = '';
+    lgnPasswordErr.innerText = '';
+
+    if (lgnUsername.validity.valueMissing) {
+      lgnUsernameErr.innerText = 'Please enter an username';
+      event.preventDefault();
+    }
+    if (lgnPassword.validity.valueMissing) {
+      lgnPasswordErr.innerText = 'Please enter a password';
+      event.preventDefault();
+    }
   });
 
   // RENDERING ETC
-  var user_id = 1;
-  var topicResults = document.querySelector('#js-topic-results');
+  var topicList = document.querySelector('.js-topic-list');
 
   var clear = function(parent) {
     while (parent.firstChild) {
@@ -90,66 +87,75 @@
   errorMessage.classList.add('is-hidden');
 
   var renderFunc = function(res) {
-    clear(topicResults);
+    clear(topicList);
     displayError();
     res.reverse();
     res.forEach(function(obj) {
-      // create container
-      var topicResult = document.createElement('div');
-      topicResult.classList.add('topic__result');
-      // create title, description and author
+      // create topic container
+      var topic = document.createElement('div');
+      topic.classList.add('topic');
+      // create title and description
       var topicTitle = document.createElement('h2');
       topicTitle.classList.add('topic__title');
       var topicDescription = document.createElement('p');
       topicDescription.classList.add('topic__description');
-      var topicAuthor = document.createElement('p');
+      // create avatar
+      var topicAvatar = document.createElement('img');
+      topicAvatar.classList.add('topic__avatar');
+      topicAvatar.setAttribute('width', '20');
+      topicAvatar.setAttribute('height', '20');
+      topicAvatar.setAttribute('src', 'https://sigil.cupcake.io/' + obj.author);
+      // create author
+      var topicAuthor = document.createElement('span');
       topicDescription.classList.add('topic__author');
-
-      // create vote container
-      var topicVote = document.createElement('div');
-      topicVote.classList.add('vote');
-
-      //radio form
-      var radioForm = `<form method='POST' action='/post/vote&topic=${
+      // create voting chart container
+      var topicVotingChart = document.createElement('div');
+      topicVotingChart.classList.add('topic__voting');
+      // create yes and no vote counters
+      var topicVotingYes = document.createElement('span');
+      topicVotingYes.classList.add('topic__voting__yes');
+      var topicVotingNo = document.createElement('span');
+      topicVotingNo.classList.add('topic__voting__no');
+      // create vote form
+      var topicVoteForm = document.createElement('div');
+      topicVoteForm.classList.add('vote');
+      topicVoteForm.innerHTML = `<form method="POST" action="/post/vote?topic=${
         obj.id
-      }' class='vote__form'>
-      <input type='radio' name='vote' value='true' class='voting__yes'>
-      <label for='voting__yes'> Yay! </label>
-      <input type='radio' name='vote' value='false' class='voting__no'>
-      <label for='voting__no'> Nay! </label>
-      <button type='submit'> Submit </button>
+      }" class="vote__form">
+      <input type="radio" name="vote" value="true" class="vote__yes">
+      <label for="vote__yes"> Yay! </label>
+      <input type="radio" name="vote" value="false" class="vote__no">
+      <label for="vote__no"> Nay! </label>
+      <button type="submit" class="vote__submit">Submit</button>
       </form>`;
-      topicVote.insertAdjacentHTML('beforeend', radioForm);
+      // create comment counter
+      var topicNumComments = document.createElement('span');
+      topicNumComments.classList.add('topic__num-comments');
 
-      // create voting chart
-      var voteNumbers = document.createElement('div');
-      voteNumbers.classList.add('topicvotes');
-      var yesVote = document.createElement('span');
-      yesVote.classList.add('topicyes');
-      var noVote = document.createElement('span');
-      noVote.classList.add('topic__no');
-
-      var comments = document.createElement('span');
-      comments.classList.add('topic__comments');
-
+      // set textContents
       topicTitle.textContent = obj.title;
       topicDescription.textContent = obj.description;
       topicAuthor.textContent = obj.author;
-      yesVote.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
-      noVote.textContent = 'no votes: ' + obj.no_votes;
-      comments.textContent = 'Comments: ' + obj.num_comments;
+      topicVotingYes.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
+      topicVotingNo.textContent = 'no votes: ' + obj.no_votes;
+      topicNumComments.textContent = 'Number of Comments: ' + obj.num_comments;
 
-      topicResult.appendChild(topicTitle);
-      topicResult.appendChild(topicDescription);
-      topicResult.appendChild(topicAuthor);
+      // append title, description, avatar and author
+      topic.appendChild(topicTitle);
+      topic.appendChild(topicDescription);
+      topic.appendChild(topicAvatar);
+      topic.appendChild(topicAuthor);
+      // append yes and no vote counters to chart and append chart
+      topicVotingChart.appendChild(topicVotingYes);
+      topicVotingChart.appendChild(topicVotingNo);
+      topic.appendChild(topicVotingChart);
+      // append vote form
+      topic.appendChild(topicVoteForm);
+      // append number of comment
+      topic.appendChild(topicNumComments);
 
-      voteNumbers.appendChild(yesVote);
-      voteNumbers.appendChild(noVote);
-      topicVote.appendChild(voteNumbers);
-      topicResult.appendChild(topicVote);
-
-      topicResult.appendChild(comments);
-      topicResults.appendChild(topicResult);
+      // append topic to container
+      topicList.appendChild(topic);
     });
   };
 
@@ -158,6 +164,3 @@
     renderFunc(res);
   });
 })();
-
-// -- CALLBACK FUNCTIONS
-// dom manipulation to update after receiving data
