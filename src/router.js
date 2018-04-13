@@ -17,6 +17,8 @@ const router = (request, response) => {
     staticHandler(response, url);
   } else if (url === '/get/topics') {
     getDataHandler(response);
+  } else if (url === '/get/user') {
+    getUserHandler(response);
   } else if (url === '/post/topic') {
     postTopicHandler(request, response);
   } else if (url.indexOf('post/vote') !== -1) {

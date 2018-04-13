@@ -76,6 +76,28 @@ const getDataHandler = response => {
   });
 };
 
+const getUserHandler = (request, response) => {
+  const userCookie = request.headers.cookie;
+  const { jwt } = cookie.parse(userCookie);
+  jwtmodule.verify(jwt, secret, (err, jwtRes) => {
+    if (err) {
+      console.log(err);
+    } else {
+      getUsername(jwtRes.userId, (err, res) => {
+        if (err) {
+          console.log(err);
+        } else {
+          response.writeHead(200, {
+            'content-type': 'application/javascript'
+          });
+          console.log(res);
+          response.end(JSON.stringify(res.username));
+        }
+      });
+    }
+  });
+};
+
 const postTopicHandler = (request, response) => {
   const userCookie = request.headers.cookie;
   if (!userCookie) return addErrorCookie(response, 'need to log in');

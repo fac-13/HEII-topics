@@ -33,6 +33,21 @@ const getData = cb => {
   );
 };
 
+const getUsername = (id, cb) => {
+  dbConnection.query(
+    'SELECT username FROM users WHERE id = $1',
+    [id],
+    (err, res) => {
+      if (err) {
+        cb(err);
+        console.log(err);
+      } else {
+        cb(null, res.rows);
+      }
+    }
+  );
+};
+
 const getUserData = (username, cb) => {
   dbConnection.query(
     'SELECT * FROM users WHERE username = $1',

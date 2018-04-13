@@ -94,11 +94,14 @@
 
   errorMessage.classList.add('is-hidden');
 
-  var renderFunc = function(res) {
+  var renderFunc = function(dataRes, usernameRes) {
+    var headerText = document.querySelector('.js-header-text');
+    headerText.textContent = 'Welcome ' + usernameRes;
+
     clear(topicList);
     displayError();
-    res.reverse();
-    res.forEach(function(obj) {
+    dataRes.reverse();
+    dataRes.forEach(function(obj) {
       // create topic container
       var topic = document.createElement('div');
       topic.classList.add('topic');
@@ -167,8 +170,10 @@
     });
   };
 
-  utility.fetch('/get/topics', function(err, res) {
+  utility.fetch('/get/topics', function(err, dataRes) {
     if (err) console.log(err);
-    renderFunc(res);
+    utility.fetch('/get/user', function(err, usernameRes) {
+      renderFunc(dataRes, usernameRes);
+    });
   });
 })();

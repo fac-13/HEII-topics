@@ -11,6 +11,7 @@ var utility = {
     xhr.addEventListener('load', function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
         console.log('fetch is working', url);
+        console.log(xhr.responseText);
         var response = JSON.parse(xhr.responseText);
         cb(null, response);
       } else {
