@@ -100,13 +100,13 @@
       var topicDescription = document.createElement('p');
       topicDescription.classList.add('topic__description');
       // create avatar
-      var topicAvatar = document.createElement('svg');
+      var topicAvatar = document.createElement('img');
       topicAvatar.classList.add('topic__avatar');
-      topicAvatar.setAttribute('width', '80');
-      topicAvatar.setAttribute('height', '80');
-      topicAvatar.setAttribute('data-jdenticon-value', obj.author);
+      topicAvatar.setAttribute('width', '20');
+      topicAvatar.setAttribute('height', '20');
+      topicAvatar.setAttribute('src', 'https://sigil.cupcake.io/' + obj.author);
       // create author
-      var topicAuthor = document.createElement('p');
+      var topicAuthor = document.createElement('span');
       topicDescription.classList.add('topic__author');
       // create voting chart container
       var topicVotingChart = document.createElement('div');

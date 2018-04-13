@@ -44,7 +44,7 @@ tape('deepEquals of getData', t => {
           author: 'Helen',
           yes_votes: '1',
           no_votes: '0',
-          comments: '1'
+          num_comments: '1'
         }
       ];
       t.deepEquals(res, expected, `should return ${expected}`);
