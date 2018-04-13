@@ -20,6 +20,7 @@
     }
 
     if (lgn__username.validity.valueMissing) {
+      lgn__username.classList.remove('is-hidden');
       lgn__usernameErr.innerText = 'Please enter an username';
       event.preventDefault();
     }
@@ -56,11 +57,13 @@
       event.preventDefault();
     }
     if (reg__password.value != reg__confirmpassword.value) {
+      reg__error.classList.remove('is-hidden');
       reg__error.innerText = 'Passwords do not match';
       event.preventDefault();
     }
 
     if (reg__username.validity.valueMissing) {
+      reg__usernameErr.classList.remove('is-hidden');
       reg__usernameErr.innerText = 'Please enter an username';
       event.preventDefault();
     }
