@@ -56,7 +56,7 @@ tape('deepEquals of getData', t => {
 // // POST DATA TESTS
 tape('testing postData', t => {
   runDbBuild((err, res) => {
-    postTopic('hello', 'world', (err, res) => {
+    postTopic('hello', 'world', 1, (err, res) => {
       if (err) t.fail(err);
       t.equal(res.command, 'INSERT', 'should call INSERT command');
       t.end();

@@ -25,7 +25,7 @@ const getData = cb => {
     (err, res) => {
       if (err) {
         cb(err);
-        console.log('error HAPPENED');
+        console.log(err);
       } else {
         cb(null, res.rows);
       }
@@ -40,6 +40,21 @@ const getUserData = (username, cb) => {
     (err, res) => {
       if (err) {
         cb(err);
+        console.log(err);
+      } else {
+        cb(null, res.rows);
+      }
+    }
+  );
+};
+
+const getComments = (topic_id, cb) => {
+  dbConnection.query(
+    'SELECT * FROM comments WHERE topic_id = $1',
+    [topic_id],
+    (err, res) => {
+      if (err) {
+        cb(err);
         console.log('error HAPPENED');
       } else {
         cb(null, res.rows);
@@ -49,10 +64,10 @@ const getUserData = (username, cb) => {
 };
 // -- POST DATA
 
-const postTopic = (topic_title, description, cb) => {
+const postTopic = (topic_title, description, user_id, cb) => {
   dbConnection.query(
-    'INSERT INTO topics (topic_title, description, user_id) VALUES ($1, $2, 1)',
-    [topic_title, description],
+    'INSERT INTO topics (topic_title, description, user_id) VALUES ($1, $2, $3)',
+    [topic_title, description, user_id],
     (err, res) => {
       if (err) {
         return cb(err);
@@ -94,6 +109,7 @@ const postUser = (username, password, cb) => {
 module.exports = {
   getData,
   getUserData,
+  getComments,
   postTopic,
   postVote,
   postUser

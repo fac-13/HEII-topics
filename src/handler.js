@@ -3,6 +3,7 @@ const path = require('path');
 const {
   getData,
   getUserData,
+  getComments,
   postTopic,
   postVote,
   postUser
@@ -56,12 +57,21 @@ const getDataHandler = response => {
       console.log('ERROR AT GET DATA HANDLER');
       addErrorCookie(response, 'sorry there was a server error');
     } else {
-      let output = JSON.stringify(res);
-      response.writeHead(200, {
-        'content-type': 'application/json',
-        'Set-Cookie': 'message=OK'
+      let itemsProcessed = 0;
+      res.forEach((e, index, array) => {
+        getComments(e.id, (err, dbComments) => {
+          itemsProcessed++;
+          e.comments = dbComments;
+          if ((itemsProcessed = array.length)) {
+            let output = JSON.stringify(res);
+            response.writeHead(200, {
+              'content-type': 'application/json',
+              'Set-Cookie': 'message=OK'
+            });
+            response.end(output);
+          }
+        });
       });
-      response.end(output);
     }
   });
 };
@@ -71,9 +81,7 @@ const postTopicHandler = (request, response) => {
   if (!userCookie) return addErrorCookie(response, 'need to log in');
   const { jwt } = cookie.parse(userCookie);
   if (!jwt) return addErrorCookie(response, 'need to log in');
-  jwtmodule.verify(jwt, secret, (err, jwt) => {
-    console.log(jwt);
-
+  jwtmodule.verify(jwt, secret, (err, jwtRes) => {
     if (err) {
       return addErrorCookie(
         response,
@@ -86,7 +94,8 @@ const postTopicHandler = (request, response) => {
         const data = querystring.parse(body);
         const topic_title = data.topic_title;
         const description = data.description;
-        postTopic(topic_title, description, (err, res) => {
+        postTopic(topic_title, description, jwtRes.userId, (err, res) => {
+          console.log(jwtRes.userId);
           if (err) {
             addErrorCookie(
               response,
@@ -117,7 +126,7 @@ const postVoteHandler = (request, response) => {
     if (!userCookie) return addErrorCookie(response, 'need to log in');
     const { jwt } = cookie.parse(userCookie);
     if (!jwt) return addErrorCookie(response, 'need to log in');
-    jwtmodule.verify(jwt, secret, (err, jwt) => {
+    jwtmodule.verify(jwt, secret, (err, jwtRes) => {
       if (err) {
         return addErrorCookie(
           response,
@@ -126,7 +135,7 @@ const postVoteHandler = (request, response) => {
       } else {
         const data = querystring.parse(body);
         let vote_value = data.vote;
-        postVote(topic_id, user_id, vote_value, (err, res) => {
+        postVote(topic_id, jwtRes.userId, vote_value, (err, res) => {
           if (err) {
             console.log(err);
             addErrorCookie(
@@ -202,8 +211,10 @@ const postUserHandler = (request, response) => {
           }
           postUser(username, hashedPassword, (err, res) => {
             if (err) {
-              console.log(err);
-              addErrorCookie(response, 'oopsy doodle there was a problemo');
+              addErrorCookie(
+                response,
+                'oopsy doodle there was a problemo ' + err.detail
+              );
             } else {
               response.writeHead(303, {
                 Location: '/',

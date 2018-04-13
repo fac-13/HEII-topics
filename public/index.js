@@ -1,7 +1,8 @@
 var utility = {
   // -- EVENT LISTENERS
-  addListener: function(selector, eventName, callback) {
-    document.querySelector(selector).addEventListener(eventName, callback);
+  // remember to add prevent default to submit button
+  addListener: function(selector, eventName, cb) {
+    document.querySelector(selector).addEventListener(eventName, cb);
   },
   // -- FETCH REQUESTS
   fetch: function(url, cb) {
