@@ -25,7 +25,7 @@ const getData = cb => {
     (err, res) => {
       if (err) {
         cb(err);
-        console.log('error HAPPENED');
+        console.log(err);
       } else {
         cb(null, res.rows);
       }
@@ -40,7 +40,7 @@ const getUserData = (username, cb) => {
     (err, res) => {
       if (err) {
         cb(err);
-        console.log('error HAPPENED');
+        console.log(err);
       } else {
         cb(null, res.rows);
       }

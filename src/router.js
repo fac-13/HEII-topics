@@ -17,9 +17,9 @@ const router = (request, response) => {
     staticHandler(response, url);
   } else if (url === '/get/topics') {
     getDataHandler(response);
-  } else if (url === '/create-topic') {
+  } else if (url === '/post/topic') {
     postTopicHandler(request, response);
-  } else if (url.indexOf('create-vote') !== -1) {
+  } else if (url.indexOf('post/vote') !== -1) {
     postVoteHandler(request, response);
   } else if (url === '/login') {
     loginHandler(request, response);

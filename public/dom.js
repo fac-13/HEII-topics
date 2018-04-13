@@ -110,9 +110,9 @@
       topicVote.classList.add('vote');
 
       //radio form
-      var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
+      var radioForm = `<form method='POST' action='/post/vote&topic=${
         obj.id
-      }&user=${user_id}' class='vote__form'>
+      }' class='vote__form'>
       <input type='radio' name='vote' value='true' class='voting__yes'>
       <label for='voting__yes'> Yay! </label>
       <input type='radio' name='vote' value='false' class='voting__no'>

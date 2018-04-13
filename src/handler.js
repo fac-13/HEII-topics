@@ -95,6 +95,7 @@ const postTopicHandler = (request, response) => {
         const topic_title = data.topic_title;
         const description = data.description;
         postTopic(topic_title, description, jwtRes.userId, (err, res) => {
+          console.log(jwtRes.userId);
           if (err) {
             addErrorCookie(
               response,
@@ -116,7 +117,6 @@ const postTopicHandler = (request, response) => {
 const postVoteHandler = (request, response) => {
   let params = querystring.parse(request.url);
   let topic_id = params.topic;
-  let user_id = params.user;
   let body = '';
   request.on('data', chunk => (body += chunk));
 
@@ -135,7 +135,7 @@ const postVoteHandler = (request, response) => {
       } else {
         const data = querystring.parse(body);
         let vote_value = data.vote;
-        postVote(topic_id, user_id, vote_value, (err, res) => {
+        postVote(topic_id, jwtRes.userId, vote_value, (err, res) => {
           if (err) {
             console.log(err);
             addErrorCookie(
