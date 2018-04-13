@@ -94,26 +94,25 @@
     displayError();
     res.reverse();
     res.forEach(function(obj) {
+      // create container
       var topicResult = document.createElement('div');
       topicResult.classList.add('topic__result');
+      // create title, description and author
       var topicTitle = document.createElement('h2');
       topicTitle.classList.add('topic__title');
-      var topicUsername = document.createElement('div');
-      topicUsername.classList.add('topic__username');
       var topicDescription = document.createElement('p');
       topicDescription.classList.add('topic__description');
       var topicAuthor = document.createElement('p');
       topicDescription.classList.add('topic__author');
 
+      // create vote container
       var topicVote = document.createElement('div');
       topicVote.classList.add('vote');
 
-      var errorMessage = document.getElementById('submitError');
-
       //radio form
-      var radioForm = `<form method='POST' action='/?end=create-vote&topic=${
+      var radioForm = `<form method='POST' action='/post/vote&topic=${
         obj.id
-      }&user=${user_id}' class='vote__form'>
+      }' class='vote__form'>
       <input type='radio' name='vote' value='true' class='voting__yes'>
       <label for='voting__yes'> Yay! </label>
       <input type='radio' name='vote' value='false' class='voting__no'>
@@ -122,25 +121,25 @@
       </form>`;
       topicVote.insertAdjacentHTML('beforeend', radioForm);
 
+      // create voting chart
       var voteNumbers = document.createElement('div');
       voteNumbers.classList.add('topicvotes');
       var yesVote = document.createElement('span');
       yesVote.classList.add('topicyes');
       var noVote = document.createElement('span');
       noVote.classList.add('topic__no');
+
       var comments = document.createElement('span');
       comments.classList.add('topic__comments');
 
       topicTitle.textContent = obj.title;
-      topicUsername.textContent = obj.username;
       topicDescription.textContent = obj.description;
       topicAuthor.textContent = obj.author;
       yesVote.textContent = 'yes votes: ' + obj.yes_votes + ' - ' + ' ';
       noVote.textContent = 'no votes: ' + obj.no_votes;
-      comments.textContent = 'Comments: ' + obj.comments;
+      comments.textContent = 'Comments: ' + obj.num_comments;
 
       topicResult.appendChild(topicTitle);
-      topicResult.appendChild(topicUsername);
       topicResult.appendChild(topicDescription);
       topicResult.appendChild(topicAuthor);
 
