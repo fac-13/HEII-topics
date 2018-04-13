@@ -24,9 +24,6 @@ input:focus {
   box-shadow: 0 0 10px #fff;
 }
 
-.error {
-  color: #a53d9a;
-}
 /* header,
 main {
   width: 90%;
@@ -95,6 +92,10 @@ main {
   width: 80%;
 }
 
+.reg__username-err,
+.reg__password-err {
+  color: #a53d9a;
+}
 /* login form */
 .lgn {
   margin: 2rem 0;
@@ -129,6 +130,10 @@ main {
   width: 80%;
 }
 
+.lgn__username-err,
+.lgn__password-err {
+  color: #a53d9a;
+}
 /* add topic form */
 .add-topic {
   height: 15vh;

@@ -11,35 +11,36 @@
 
   var regPassword = document.querySelector('.js-reg-password');
   var regConfirm = document.querySelector('.js-reg-confirm');
-  var regPasswordError = document.querySelector('.js-reg-password-err');
+  var regPasswordErr = document.querySelector('.js-reg-password-err');
 
   var regSubmit = document.querySelector('.js-reg-submit');
 
   regForm.addEventListener('submit', function(event) {
     regUsernameErr.innerText = '';
-    regPasswordError.innerText = '';
+    regPasswordErr.innerText = '';
+
     if (regUsername.validity.valueMissing) {
-      regUsername.classList.remove('is-hidden');
+      regUsernameErr.classList.remove('is-hidden');
       regUsernameErr.innerText = 'Please enter an username';
       event.preventDefault();
     }
     if (regPassword.validity.valueMissing || regConfirm.validity.valueMissing) {
-      regPasswordError.classList.remove('is-hidden');
-      regPasswordError.innerText = 'Please enter a password';
+      regPasswordErr.classList.remove('is-hidden');
+      regPasswordErr.innerText = 'Please enter a password';
       event.preventDefault();
     }
     if (
       regPassword.validity.patternMismatch ||
       regConfirm.validity.patternMismatch
     ) {
-      regPasswordError.classList.remove('is-hidden');
-      regPasswordError.innerText =
+      regPasswordErr.classList.remove('is-hidden');
+      regPasswordErr.innerText =
         'Password should contain at least eight characters, including one uppercase letter, one lowercase letter and one number';
       event.preventDefault();
     }
     if (regPassword.value != regConfirm.value) {
-      regPasswordError.innerText = 'Passwords do not match';
-      regPasswordError.classList.remove('is-hidden');
+      regPasswordErr.innerText = 'Passwords do not match';
+      regPasswordErr.classList.remove('is-hidden');
       event.preventDefault();
     }
     // error handling if username input already exists on database
@@ -49,26 +50,27 @@
   // login form
   var lgnForm = document.querySelector('.js-lgn-form');
 
-  var lgnUsername = document.querySelector('.js-lgn-username');
+  var lgnUsername = document.getElementById('lgn-username');
   var lgnUsernameErr = document.querySelector('.js-lgn-username-err');
 
-  var lgnPassword = document.querySelector('.js-lgn-password');
+  var lgnPassword = document.getElementById('lgn-password');
   var lgnPasswordErr = document.querySelector('.js-lgn-password-err');
 
   var lgnSubmit = document.querySelector('.js-lgn-submit');
-
   lgnForm.addEventListener('submit', function(event) {
     lgnUsernameErr.innerText = '';
     lgnPasswordErr.innerText = '';
 
     if (lgnUsername.validity.valueMissing) {
-      lgnUsernameErr.innerText = 'Please enter an username';
+      console.log('login username validity');
       lgnUsernameErr.classList.remove('is-hidden');
+      lgnUsernameErr.innerText = 'Please enter an username';
       event.preventDefault();
     }
     if (lgnPassword.validity.valueMissing) {
-      lgnPasswordErr.innerText = 'Please enter a password';
+      ('login passwrd validity');
       lgnPasswordErr.classList.remove('is-hidden');
+      lgnPasswordErr.innerText = 'Please enter a password';
       event.preventDefault();
     }
   });
