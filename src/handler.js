@@ -108,7 +108,6 @@ const postTopicHandler = (request, response) => {
 const postVoteHandler = (request, response) => {
   let params = querystring.parse(request.url);
   let topic_id = params.topic;
-  let user_id = params.user;
   let body = '';
   request.on('data', chunk => (body += chunk));
 

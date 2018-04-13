@@ -12,7 +12,7 @@ const getData = cb => {
       u.username AS author,
       COUNT(CASE WHEN v.value = 'yes' THEN 1 ELSE null END) AS yes_votes,
       COUNT(CASE WHEN v.value = 'no' THEN 1 ELSE null END) AS no_votes,
-      COUNT(c.*) AS comments
+      COUNT(c.*) AS num_comments
     FROM topics t
     LEFT JOIN users u
     ON t.user_id = u.id

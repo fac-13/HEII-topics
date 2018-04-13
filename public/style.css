@@ -7,6 +7,7 @@ body {
   background-color: #3c5456;
   color: #fff;
   font-family: 'Lato', sans-serif;
+  margin: 0;
 }
 
 header,
@@ -18,14 +19,58 @@ main {
   align-items: center;
 }
 
+/* / Submit error / */
+.submitError {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 2rem 1rem;
+  width: 100%;
+}
+
+/* auth */
+.auth {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 1000px;
+}
+
+@media only screen and (min-width: 600px) {
+  .auth {
+    flex-direction: row;
+  }
+}
 
 /* registrion form */
 .reg {
+  margin: 2rem 0;
   border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.reg__header {
+  height: 20%;
+}
+
+.reg__form {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .reg__label {
-  display: block;
+  display: flex;
 }
 
 .reg__input {
@@ -35,8 +80,27 @@ main {
 
 /* login form */
 .lgn {
-  margin-top: 2rem;
+  margin: 2rem 0;
   border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.lgn__header {
+  height: 20%;
+}
+
+.lgn__form {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .lgn__label {
@@ -48,43 +112,34 @@ main {
   width: 80%;
 }
 
-
 /* add topic form */
-
-
-/* sections topics */
-.scn__topics {
-  margin-top: 3rem;
-  border-top: 1px solid white;
+.add-topic {
+  height: 15vh;
+  text-align: center;
 }
-.topic__results {
+/* topics list */
+
+.topic__list {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: left;
-  width: 100%;
+  width: 90%;
+  max-width: 1000px;
 }
 
 .topic {
-  width: 50%;
+  width: 100%;
   padding: 1rem;
   border: 3px solid #fff;
   border-radius: 10px;
   margin: 5px;
 }
 
-/* / Submit error / */
-.submitError {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: white;
-  color: black;
-  text-align: center;
-  padding: 2rem 1rem;
+.topic__avatar {
+  height: 100%;
+  width: 100%;
 }
-
 .is-hidden {
   display: none;
 }

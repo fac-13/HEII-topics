@@ -50,7 +50,7 @@ const router = (request, response) => {
         });
       }
     }
-  } else if (url.indexOf('create-vote') !== -1) {
+  } else if (url.indexOf('post/vote') !== -1) {
     postVoteHandler(request, response);
   } else if (url === '/login') {
     loginHandler(request, response);
