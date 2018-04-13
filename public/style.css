@@ -9,6 +9,7 @@ body {
   background-color: #2d3a4f;
   color: #fff;
   font-family: 'Lato', sans-serif;
+  margin: 0;
 }
 
 input {
@@ -35,43 +36,116 @@ main {
   align-items: center;
 } */
 
-/* form */
-
-.form__label {
-  display: block;
+/* / Submit error / */
+.submitError {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 2rem 1rem;
+  width: 100%;
 }
 
-.form__input {
+/* auth */
+.auth {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 1000px;
+}
+
+@media only screen and (min-width: 600px) {
+  .auth {
+    flex-direction: row;
+  }
+}
+
+/* registrion form */
+.reg {
+  margin: 2rem 0;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.reg__header {
+  height: 20%;
+}
+
+.reg__form {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.reg__label {
+  display: flex;
+}
+
+.reg__input {
   display: block;
   width: 80%;
 }
-/* section registrion */
-.scn__registration {
+
+/* login form */
+.lgn {
+  margin: 2rem 0;
   border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-grow: 1;
 }
 
-/* section login */
-.scn__login {
-  margin-top: 2rem;
-  border-top: 1px solid white;
+.lgn__header {
+  height: 20%;
 }
 
-/* sections topics */
-.scn__topics {
-  min-width: 60%;
-  margin-top: 3rem;
-  border-top: 1px solid white;
+.lgn__form {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.topic__results {
+.lgn__label {
+  display: block;
+}
+
+.lgn__input {
+  display: block;
+  width: 80%;
+}
+
+/* add topic form */
+.add-topic {
+  height: 15vh;
+  text-align: center;
+}
+/* topics list */
+
+.topic__list {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: left;
-  width: 100%;
+  width: 90%;
+  max-width: 1000px;
 }
 
-.topic__result {
+.topic {
   width: 100%;
   padding: 1rem;
   border: 3px solid #fff;
@@ -79,18 +153,9 @@ main {
   margin: 5px;
 }
 
-/* / Submit error / */
-.submitError {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: white;
-  color: black;
-  text-align: center;
-  padding: 2rem 1rem;
+.topic__avatar {
+  display: inline;
 }
-
 .is-hidden {
   display: none;
 }

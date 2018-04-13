@@ -1,10 +1,10 @@
 var utility = {
   // -- EVENT LISTENERS
   // remember to add prevent default to submit button
-  addListener: function(selector, eventName, callback) {
-    document.querySelector(selector).addEventListener(eventName, callback);
+  addListener: function(selector, eventName, cb) {
+    document.querySelector(selector).addEventListener(eventName, cb);
   },
-  //   -- FETCH requests
+  // -- FETCH REQUESTS
   fetch: function(url, cb) {
     var xhr = new XMLHttpRequest();
 

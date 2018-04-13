@@ -14,62 +14,66 @@
 
 <body>
     <span id="submitError" class="submitError is-hidden">OK</span>
-    <header>
+    <!-- HEADER -->
+    <header class="header">
         <h1>Welcome!</h1>
     </header>
-
-    <section class="scn__registration">
-        <h2>Register here</h2>
-        <form class="registration__form" action="/registration" method="post" novalidate>
-            <label class="form__label" for="username">Username:
-                <input id="reg__username" class="form__input" type="text" name='username' value='' required/>
-            </label>
-            <p id="reg__usernameErr" class="error is-hidden" ></p>
-            <label class="form__label" for="password">Password:
-                <input id="reg__password" class="form__input" type="password" name='password' value='' required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$"
+    <div class="auth">
+        <!-- REGISTRATION -->
+        <section class="reg">
+            <header class="reg__header">
+                <h2 class="reg__title">Register</h2>
+            </header>
+            <form class="js-reg-form reg__form" action="/registration" method="post" novalidate>
+                <label class="reg__label" for="reg-username">Username:</label>
+                <input class="js-reg-username reg__input reg__username" id="reg-username" type="text" name='username' value='' required />
+                <p class="is-hidden js-reg-username-err reg__username-err"></p>
+                <label class="reg__label" for="reg-password">Password:</label>
+                <input class="js-reg-password reg__input reg__password" id="reg-password" type="password" name='password' value='' required
+                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$" />
+                <label class="reg__label" for="reg-confirm">Confirm password:</label>
+                <input class="js-reg-confirm reg__input reg__confirm" id="reg-confirm" type="password" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$"
                 />
-            </label>
-            <label class="form__label" for="confirmPassword">Confirm password:
-                <input id="reg__confirmpassword" class="form__input" id="confirmPassword" type="password" required pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$"
-                />
-            </label>
-            <p id="reg__confirmErr" class="error" aria-live="polite"></p>
-            <button id="registration__button">Sign me up</button>
-        </form>
+                <p class="is-hidden js-reg-password-err reg__password-err" aria-live="polite"></p>
 
-    </section>
-    <section class="scn__login">
-        <h2>Login</h2>
-        <form class="login__form" action="/login" method="POST" novalidate>
-            <label class="form__label" for="username">Username:
-                <input id="lgn__username" class="form__input" type="text" name="username" required/>
-            </label>
-            <p id="lgn__usernameErr" class="error"></p>
-            <label class="form__label" for="password">Password:
-                <input id="lgn__password" class="form__input" type="password" name="password" required />
-            </label>
-            <p id="lgn__confirmErr" class="error" aria-live="polite"></p>
-            <button id="login__button">Login</button>
-        </form>
-    </section>
-    <section class="scn__topics">
-        <header>
-            <h2>Topics</h2>
-        </header>
-        <main>
-            <form method="POST" action="/create-topic" class="form">
-                <input aria-label="topic" name="topic_title" type="text" value="" placeholder="What should we do?" required autocomplete="off"
-                    class="form__title"></input>
-                <input aria-label="topic" name="description" type="text" value="" placeholder="details..." required autocomplete="off" class="form__description"></input>
-                <input type="submit" class="form__submit"></input>
+                <button class="js-reg-submit reg__submit">Sign me up</button>
             </form>
-
-            <section id='js-topic-results' class='topic__results'></section>
-        </main>
+        </section>
+        <!-- LOGIN -->
+        <section class="lgn">
+            <header class="lgn__header">
+                <h2 class="lgn__title">Login</h2>
+            </header>
+            <form class="js-lgn-form lgn__form" action="/login" method="POST" novalidate>
+                <label class="lgn__label" for="lgn-username">Username:</label>
+                <input class "js-lgn-username lgn__input lgn__username" id="lgn-username" type="text" name="username" required />
+                <p class="is-hidden js-lgn-username-err lgn__username-err"></p>
+                <label class="form__label" for="lgn-password">Password:</label>
+                <input class "js-lgn-password lgn__input lgn__password" id="lgn-password" type="password" name="password" required />
+                <p class="is-hidden js-lgn-password-err lgn__password-err" aria-live="polite"></p>
+                <button id="login__button">Login</button>
+            </form>
+        </section>
+    </div>
+    <!-- ADD A TOPIC -->
+    <section class="add-topic">
+        <h2>Topics</h2>
+        <form method="POST" action="/post/topic" class="add-topic__form">
+            <input class="add-topic__input add-topic__title" aria-label="topic" name="topic_title" type="text" value="" placeholder="What should we do?"
+                required autocomplete="off">
+            </input>
+            <input class="add-topic__input add-topic__description" aria-label="topic" name="description" type="text" value="" placeholder="details..."
+                required autocomplete="off">
+            </input>
+            <input class="add-topic__submit" type="submit"></input>
+        </form>
     </section>
+    <!-- TOPICS -->
+    <section class="js-topic-list topic__list"></section>
 
     <script src="public/index.js" type="text/javascript"></script>
     <script src="public/dom.js" type="text/javascript"></script>
+
 </body>
 
 </html>
